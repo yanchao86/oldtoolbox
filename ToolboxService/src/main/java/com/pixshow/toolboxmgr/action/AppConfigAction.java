@@ -1,11 +1,9 @@
 package com.pixshow.toolboxmgr.action;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.Action;
@@ -21,28 +19,50 @@ import com.pixshow.redis.RedisToolboxService;
 import com.pixshow.toolboxmgr.service.PropertiesService;
 import com.pixshow.toolboxmgr.tools.ImageStorageTootl;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 @Controller
 @Scope("prototype")
 @Namespace("/service")
 public class AppConfigAction extends BaseAction {
 
-    private static final long     serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     @Autowired
-    private PropertiesService     propertiesService;
+    private PropertiesService   propertiesService;
     @Autowired
-    private RedisToolboxService   redisToolboxService;
+    private RedisToolboxService redisToolboxService;
 
-    private Object                result           = null;
-    private static final String[] keys             = new String[] { "APP1_CONFIG", "APP2_CONFIG", "APP3_CONFIG", "APP4_CONFIG", "APP5_CONFIG" };
+    private Object                result = null;
+    private static final String[] keys   = new String[] { "APP1_CONFIG", "APP2_CONFIG", "APP3_CONFIG", "APP4_CONFIG", "APP5_CONFIG" };
 
     @Action(value = "appConfig", results = { @Result(name = SUCCESS, type = "json", params = { "root", "result" }) })
     public String appConfig() {
         this.result = new JSONObject();
+        List<String> list = new ArrayList<String>();
+        boolean fromredis = false;
+        String rKey = "appConfig@APP_CONFIG";
+        if (redisToolboxService.check(rKey)) {
+            try {
+                JSONArray arr = JSONArray.fromObject(redisToolboxService.get(rKey));
+                for (int i = 0; i < arr.size(); i++) {
+                    list.add(arr.getString(i));
+                }
+                fromredis = true;
+            } catch (Exception e) {
+                log.info(rKey + " to jsonarr error");
+            }
+        }
+        if (fromredis) {
+            return SUCCESS;
+        } else {
+            list = propertiesService.getValue(keys);
+        }
+
         HttpServletRequest request = ServletActionContext.getRequest();
         String query = request.getQueryString();
 
-        List<String> list = propertiesService.getValue(keys);
         for (int i = 0; i < keys.length; i++) {
             String code = keys[i];
             code = code.substring(0, code.indexOf("_"));
@@ -60,18 +80,39 @@ public class AppConfigAction extends BaseAction {
             adjson.put("icon", ImageStorageTootl.getUrl(adjson.getString("icon")));
             ((JSONObject) result).put(code, json);
         }
+        try {
+            redisToolboxService.set(rKey, JSONArray.fromObject(list).toString());
+        } catch (Exception e) {
+            log.info(rKey + " to set redis error");
+        }
         return SUCCESS;
     }
 
     @Action(value = "appConfigArray", results = { @Result(name = SUCCESS, type = "json", params = { "root", "result" }) })
     public String appConfigArray() {
         this.result = new JSONArray();
-
-        String rKey = "appConfigArray@" + JSONArray.fromObject(keys);
+        List<String> list = new ArrayList<String>();
+        boolean fromredis = false;
+        String rKey = "appConfig@APP_CONFIG";
+        if (redisToolboxService.check(rKey)) {
+            try {
+                JSONArray arr = JSONArray.fromObject(redisToolboxService.get(rKey));
+                for (int i = 0; i < arr.size(); i++) {
+                    list.add(arr.getString(i));
+                }
+                fromredis = true;
+            } catch (Exception e) {
+                log.info(rKey + " to jsonarr error");
+            }
+        }
+        if (fromredis) {
+            return SUCCESS;
+        } else {
+            list = propertiesService.getValue(keys);
+        }
 
         HttpServletRequest request = ServletActionContext.getRequest();
         String query = request.getQueryString();
-        List<String> list = propertiesService.getValue(keys);
         for (int i = 0; i < keys.length; i++) {
             String code = keys[i];
             code = code.substring(0, code.indexOf("_"));
@@ -89,6 +130,12 @@ public class AppConfigAction extends BaseAction {
             JSONObject adjson = json.getJSONObject("toolbarAdvertisement");
             adjson.put("icon", ImageStorageTootl.getUrl(adjson.getString("icon")));
             ((JSONArray) result).add(json);
+        }
+        
+        try {
+            redisToolboxService.set(rKey, JSONArray.fromObject(list).toString());
+        } catch (Exception e) {
+            log.info(rKey + " to set redis error");
         }
         return SUCCESS;
     }

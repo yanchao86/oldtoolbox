@@ -1,5 +1,7 @@
 package com.pixshow.toolboxmgr.action;
 
+import java.util.Date;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -14,6 +16,7 @@ import com.pixshow.framework.support.BaseAction;
 import com.pixshow.framework.utils.StringUtility;
 import com.pixshow.redis.RedisToolboxService;
 import com.pixshow.toolboxmgr.bean.DiyboxBean;
+import com.pixshow.toolboxmgr.bean.ToolboxBean;
 import com.pixshow.toolboxmgr.service.DiyboxService;
 import com.pixshow.toolboxmgr.service.DownloadService;
 import com.pixshow.toolboxmgr.service.StatService;
@@ -46,39 +49,63 @@ public class DownloadAction extends BaseAction {
         try {
             String code = null;
             if (appId != null) {
-                String rKey = "download@tb_toolbox_" + appId;
-                String downloadUrl = redisToolboxService.get(rKey);
-                if (StringUtility.isEmpty(downloadUrl)) {
+                String downloadUrl = null;
+                String rKey = "download@appId_url_" + appId;
+                if (redisToolboxService.check(rKey)) {
+                    downloadUrl = redisToolboxService.get(rKey);
+                } else {
                     downloadUrl = downloadService.getUrl("tb_toolbox", appId);
                     redisToolboxService.set(rKey, downloadUrl);
                 }
-
-//                                downloadService.addDownloadCount("tb_toolbox", appId);
 
                 if (StringUtils.isEmpty(downloadUrl)) {
                     throw new DoNotCatchException();
                 }
                 ActionContext.getContext().put("downloadUrl", downloadUrl);
-
                 //
-                //                ToolboxBean toolbox = toolboxService.searchByIDTool(appId);
-                //                code = toolbox != null ? toolbox.getPackageName() + "_toolbox_download" : null;
+                String dyKey = "download@appId_" + appId;
+                if (redisToolboxService.check(dyKey)) {
+                    code = redisToolboxService.get(dyKey);
+                } else {
+                    ToolboxBean toolbox = toolboxService.searchByIDTool(appId);
+                    code = toolbox != null ? toolbox.getPackageName() + "_toolbox_download" : null;
+                    redisToolboxService.set(dyKey, code);
+                }
+
             }
 
             if (diyId != null) {
-                downloadService.addDownloadCount("tb_diybox", diyId);
-                String downloadUrl = downloadService.getUrl("tb_diybox", diyId);
+                String downloadUrl = null;
+                String rKey = "download@diyId_url_" + diyId;
+                if (redisToolboxService.check(rKey)) {
+                    downloadUrl = redisToolboxService.get(rKey);
+                } else {
+                    downloadUrl = downloadService.getUrl("tb_diybox", diyId);
+                    redisToolboxService.set(rKey, downloadUrl);
+                }
+
                 ActionContext.getContext().put("downloadUrl", downloadUrl);
-
                 //
-                DiyboxBean diybox = diyboxService.searchById(diyId);
-                code = diybox != null ? diybox.getPackageName() + "_diybox_download" : null;
-            }
+                String dyKey = "download@diyId_" + diyId;
+                if (redisToolboxService.check(dyKey)) {
+                    code = redisToolboxService.get(dyKey);
+                } else {
+                    DiyboxBean diybox = diyboxService.searchById(diyId);
+                    code = diybox != null ? diybox.getPackageName() + "_diybox_download" : null;
+                    redisToolboxService.set(dyKey, code);
+                }
 
+            }
             //
-            //            if (StringUtility.isNotEmpty(code)) {
-            //                statService.pvStat(code, 1, new Date());
-            //            }
+            if (appId != null) {
+                downloadService.addDownloadCount("tb_diybox", diyId);
+            }
+            if (diyId != null) {
+                downloadService.addDownloadCount("tb_diybox", diyId);
+            }
+            if (StringUtility.isNotEmpty(code)) {
+                statService.pvStat(code, 1, new Date());
+            }
         } catch (Exception e) {
             throw new DoNotCatchException();
         }

@@ -1,0 +1,42 @@
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+	<bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest" name="DiskFileItemMultiPartRequest" class="com.pixshow.framework.ext.struts.DiskFileItemMultiPartRequest" scope="default" />
+
+	<constant name="struts.convention.default.parent.package" value="default" />
+	<constant name="struts.convention.result.path" value="/" />
+	<constant name="struts.convention.exclude.parentClassLoader" value="false" />
+	<constant name="struts.convention.action.disableJarScanning" value="false" />
+	<constant name="struts.convention.action.packages" value="com.pixshow" />
+	<constant name="struts.convention.action.includeJars" value=".*?Framework\.jar(!/|/)?,.*?App\.jar(!/|/)?" />
+
+	<constant name="struts.action.extension" value="do" />
+
+	<constant name="struts.multipart.sizeThreshold" value="51200" />
+	<constant name="struts.multipart.maxSize" value="104857600" />
+	<constant name="struts.multipart.handler" value="MultiPartRequest" />
+
+	<package name="default" extends="convention-default">
+		<result-types>
+			<result-type name="json" class="com.pixshow.framework.ext.struts.JSONResult" />
+		</result-types>
+
+		<interceptors>
+			<interceptor name="unhandledException" class="com.pixshow.framework.exception.internal.UnhandledExceptionInterceptor" />
+			<interceptor name="json" class="org.apache.struts2.json.JSONInterceptor" />
+			<interceptor name="jsonValidation" class="org.apache.struts2.json.JSONValidationInterceptor" />
+			<interceptor-stack name="frameworkStack">
+				<interceptor-ref name="unhandledException" />
+				<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="jsonValidation" />
+			</interceptor-stack>
+		</interceptors>
+
+		<default-interceptor-ref name="frameworkStack" />
+
+	</package>
+
+</struts>

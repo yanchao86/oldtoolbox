@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="pixshow" default="main" basedir=".">
+
+	<property file="build.properties" />
+	
+    <tstamp>
+    	<format property="build-version" pattern="yyyyMMddHHmm"/>
+    </tstamp>
+
+
+	<path id="project.classpath">
+		<fileset dir="lib" includes="**/*.jar" />
+	</path>
+
+	<target name="clean">
+		<delete dir="bin" />
+		<delete dir="build" />
+	</target>
+
+	<target name="init" depends="clean">
+		<mkdir dir="bin" />
+		<mkdir dir="build" />
+		<mkdir dir="${project.release}" />
+	</target>
+
+	<!-- =================================
+		target: compile
+		================================= -->
+	<target name="compile" depends="init">
+		<echo message="##### Compile [${project.name}]" />		
+		<javac
+			debug="true"
+			deprecation="true"
+			srcdir="src/main/java"
+			destdir="bin"
+			nowarn="false"
+			target="${project.java.version}"
+			source="${project.java.version}"
+			encoding="${project.encoding}">
+			<classpath refid="project.classpath" />
+			<include name="**/*.java" />
+			<exclude name="**/package-info.java" />
+		</javac>
+	</target>
+
+	<!-- =================================
+		target: release
+		================================= -->
+	<target name="release" depends="compile">
+	
+	    <copy todir="bin">
+	    	<fileset dir="src/main/java">
+	    		<exclude name="**/*.java" />	
+	    	</fileset>
+    		<fileset dir="src/main/resources"></fileset>
+    	</copy>
+
+		<mkdir dir="bin/META-INF" />
+	    <manifest file="bin/META-INF/MANIFEST.MF">
+	    	<attribute name="Implementation-Version" value="${build-version}" />
+	    </manifest>
+
+	    <jar destfile="build/${project.name}.jar" manifest="bin/META-INF/MANIFEST.MF">
+			<fileset dir="bin">
+			</fileset>
+		</jar>
+
+		<copy file="build/${project.name}.jar" tofile="${project.release}/${project.name}-${build-version}.jar"/>
+		
+		<zip destfile="${project.release}/${project.name}-${build-version}.src.zip">
+			<zipfileset dir="src" ></zipfileset> 
+		</zip>
+		
+		
+	</target>
+
+	<target name="main" depends="release">
+		<echo message="############# built ${project.name} #############" />
+	</target>
+</project>

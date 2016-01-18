@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+    </style>
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDB9qkkP7U_0sYaykrhpWprh2E7uezjmj0&sensor=true">
+    </script>
+    <script type="text/javascript">
+    var map;
+    var poly;
+	var path = new google.maps.MVCArray;
+	function initialize() {
+		var mapOptions = {
+			center: new google.maps.LatLng(40.00658,116.100769),
+			zoom: 10,
+			scaleControl:true,
+			mapTypeId: google.maps.MapTypeId.ROADMAP
+		};
+		map = new google.maps.Map(
+			document.getElementById("map-canvas"),
+			mapOptions
+		);
+		poly = new google.maps.Polygon({
+			strokeWeight: 3,
+			fillColor: '#5555FF'
+		});
+	    
+	    poly.setMap(map);
+	  	poly.setPaths(new google.maps.MVCArray([path]));
+	
+		google.maps.event.addListener(map, 'click', addPolygonPoint);
+		google.maps.event.addListener(map, 'rightclick', addMarker);
+	}
+    
+    function addPolygonPoint(event) {
+    	path.insertAt(path.length, event.latLng);
+    }
+    
+    function addMarker(event) {
+		var marker = new google.maps.Marker({
+			position: event.latLng,
+			map: map,
+			draggable: true
+		});
+		var latlng = event.latLng;
+    	console.debug(latlng.lat() + "," + latlng.lng());
+    }
+    
+    google.maps.event.addDomListener(window, 'load', initialize);
+    
+    function getLatlng(){
+    	var msg = "";
+    	path.forEach(function(p, number){
+    		msg += 'polygon.add(new LatLng('+p.lat()+','+p.lng()+'));';
+    	})
+    	console.debug(msg);
+    	
+    }
+    
+  </script>
+  </head>
+  <body>
+  	<div style="height: 5%"><button onclick="getLatlng()">getLatlng()</button></div>
+    <div style="height: 90%" id="map-canvas"/>
+  </body>
+</html>

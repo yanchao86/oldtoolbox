@@ -1,13 +1,17 @@
 package com.pixshow.redis;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.BoundValueOperations;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.SessionCallback;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.pixshow.framework.utils.DateUtility;
@@ -15,8 +19,12 @@ import com.pixshow.framework.utils.StringUtility;
 import com.pixshow.toolboxmgr.service.DownloadService;
 import com.pixshow.toolboxmgr.service.StatService;
 
+import net.sf.json.JSONArray;
+
 @Service
 public class RedisToolboxService extends AbstractRedisService<String, String> {
+    private final static Log log = LogFactory.getLog(RedisToolboxService.class);
+
     @Autowired
     private DownloadService downloadService;
     @Autowired
@@ -24,33 +32,48 @@ public class RedisToolboxService extends AbstractRedisService<String, String> {
 
     public void downLoadStat(Integer appId, Integer diyId, String code) {
         Date date = new Date();
+        String day = DateUtility.format(date, "yyyyMMdd");
         if (appId != null) {
-            String key = "tb_toolbox_dl_day_stat@" + appId;
+            String key = "downLoadStat@tb_toolbox@" + appId + "@" + day;
             stat(key);
-
-            downloadService.addDownloadCount("tb_toolbox", appId);
         }
         if (diyId != null) {
-            String key = "tb_diybox_dl_day_stat@" + diyId;
+            String key = "downLoadStat@tb_diybox@" + diyId + "@" + day;
             stat(key);
-
-            downloadService.addDownloadCount("tb_diybox", diyId);
         }
         if (StringUtility.isNotEmpty(code)) {
-            String day = DateUtility.format(date, "yyyyMMdd");
-            String key = "tb_toolbox_day_stat@" + code + "@" + day;
+            String key = "downLoadStat@tb_toolbox_day_stat@" + code + "@" + day;
             stat(key);
-
-            statService.pvStat(code, 1, date);
         }
     }
-    
-//  @Scheduled(fixedRate = 5000)
+
+    @Scheduled(fixedRate = 1000 * 5)
     public void mysql2redis() {
-        String pattern = "tb_toolbox_dl_day_stat@";
+        String pattern = "downLoadStat@*";
         Set<String> keys = redisTemplate.keys(pattern);
-        
-        
+        System.out.println("stat start, keys=" + JSONArray.fromObject(keys).toString());
+        Iterator<String> it = keys.iterator();
+        while (it.hasNext()) {
+            try {
+                String key = it.next();
+                String[] arr = key.split("@");
+                String table = arr[1];
+                String toolId = arr[2];
+                String day = arr[3];
+                String count = this.get(key);
+                this.set(key, "0");
+
+                if ("tb_toolbox_day_stat".equals(table)) {
+                    statService.pvStat(toolId, Integer.parseInt(count), Integer.parseInt(day));
+                } else {
+                    downloadService.addDownloadCount(table, Integer.parseInt(toolId), Integer.parseInt(day), Integer.parseInt(count));
+                }
+            } catch (Exception e) {
+                log.info("error > mysql2redis > downLoadStat " + e.getMessage());
+            }
+
+        }
+
     }
 
     private void stat(final String key) {

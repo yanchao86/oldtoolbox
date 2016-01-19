@@ -33,4 +33,13 @@ public class DownloadDao extends BaseDao {
     public void updateDownloadCountDay(String table, int toolId, int day) {
         update("update " + table + "_dl_day_stat SET count=count+1 WHERE toolId=? and day=?", toolId, day);
     }
+    
+    //////////////////////////////////////////////////////////////
+    public void addDownloadCount(String table, int id, int count) {
+        update("UPDATE " + table + " SET downloadCount=downloadCount+"+count+" WHERE id=?", id);
+    }
+    public void saveDownloadCountDay(String table, int toolId, int day, int count) {
+        insert("INSERT INTO "+table+"_dl_day_stat (toolId,day,count) VALUES (?,?,1) ON DUPLICATE KEY UPDATE count=count+" + count, toolId, day);    
+    }
+    
 }

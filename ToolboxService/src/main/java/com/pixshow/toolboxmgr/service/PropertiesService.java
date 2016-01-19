@@ -18,62 +18,60 @@ import com.pixshow.toolboxmgr.dao.PropertiesDao;
 
 @Service
 public class PropertiesService {
-	private Log log = LogFactory.getLog(PropertiesService.class);
-	@Autowired
-	PropertiesDao propertyDao;
-	@Autowired
-	RedisToolboxService redisToolboxService;
+    private Log         log = LogFactory.getLog(PropertiesService.class);
+    @Autowired
+    PropertiesDao       propertyDao;
+    @Autowired
+    RedisToolboxService redisToolboxService;
 
-	private static final String[] keys = new String[] { "APP1_CONFIG",
-			"APP2_CONFIG", "APP3_CONFIG", "APP4_CONFIG", "APP5_CONFIG" };
+    private static final String[] keys = new String[] { "APP1_CONFIG", "APP2_CONFIG", "APP3_CONFIG", "APP4_CONFIG", "APP5_CONFIG" };
 
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-	public String getValue(String key) {
-		try {
-			return propertyDao.getValue(key);
-		} catch (Exception e) {
-			return "";
-		}
-	}
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public String getValue(String key) {
+        try {
+            return propertyDao.getValue(key);
+        } catch (Exception e) {
+            return "";
+        }
+    }
 
-	public List<String> getValue(String... keys) {
-		try {
-			return propertyDao.getValue(keys);
-		} catch (Exception e) {
-			return null;
-		}
-	}
+    public List<String> getValue(String... keys) {
+        try {
+            return propertyDao.getValue(keys);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
-	public List<Map<String, Object>> likeValue(String like) {
-		return propertyDao.likeValue(like);
-	}
+    public List<Map<String, Object>> likeValue(String like) {
+        return propertyDao.likeValue(like);
+    }
 
-	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-	public String getValue(String key, String defaultValue) {
-		String tmp = "";
-		try {
-			tmp = propertyDao.getValue(key);
-		} catch (Exception e) {
-			return defaultValue;
-		}
-		if (StringUtility.isNotEmpty(tmp))
-			return tmp;
-		return defaultValue;
-	}
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public String getValue(String key, String defaultValue) {
+        String tmp = "";
+        try {
+            tmp = propertyDao.getValue(key);
+        } catch (Exception e) {
+            return defaultValue;
+        }
+        if (StringUtility.isNotEmpty(tmp))
+            return tmp;
+        return defaultValue;
+    }
 
-	@Transactional(propagation = Propagation.REQUIRED)
-	public void setValue(String key, String value) {
-		propertyDao.setValue(key, value);
-	}
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void setValue(String key, String value) {
+        propertyDao.setValue(key, value);
+    }
 
-	public void searchAppConfigArrayAndUpdate2Redis() {
-		String rKey = "appConfig@APP_CONFIG";
-		List<String> list = this.getValue(keys);
-		try {
-			redisToolboxService
-					.set(rKey, JSONArray.fromObject(list).toString());
-		} catch (Exception e) {
-			log.info(rKey + " to set redis error");
-		}
-	}
+    public void searchAppConfigArrayAndUpdate2Redis() {
+        String rKey = "appConfig@APP_CONFIG";
+        List<String> list = this.getValue(keys);
+        try {
+            redisToolboxService.set(rKey, JSONArray.fromObject(list).toString());
+        } catch (Exception e) {
+            log.info(rKey + " to set redis error");
+        }
+    }
 }

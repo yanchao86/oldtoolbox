@@ -29,8 +29,15 @@ public class StatService extends BaseService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    public void pvStat(String code, int count, int day) {
+        statDao.countDayStat(code, day, count);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void uvStat(String code, String uid, Date date) {
-        if (StringUtility.isEmpty(uid)) { return; }
+        if (StringUtility.isEmpty(uid)) {
+            return;
+        }
         int day = Integer.parseInt(DateUtility.format(date, "yyyyMMdd"));
         if (statDao.findDayStatUv(uid, code, day)) {
             statDao.countDayStat(code, day, 1);
@@ -45,7 +52,9 @@ public class StatService extends BaseService {
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     public void uvStat(String code, String productCode, String productVersion, String sdkVersion, String uid, Date date) {
-        if (StringUtility.isEmpty(uid)) { return; }
+        if (StringUtility.isEmpty(uid)) {
+            return;
+        }
         int day = Integer.parseInt(DateUtility.format(date, "yyyyMMdd"));
         if (statDao.findDayStatUv(uid, code, productCode, productVersion, sdkVersion, day)) {
             statDao.countDayStat(code, productCode, productVersion, sdkVersion, day, 1);

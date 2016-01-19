@@ -35,7 +35,7 @@ public class DownloadService extends BaseService {
      */
     public void addDownloadCount(String table, int toolId) {
         downloadDao.addDownloadCount(table, toolId);
-        
+
         int day = Integer.parseInt(DateUtility.format(new Date(), "yyyyMMdd"));
         if (statistics.containsKey(toolId + "@" + table + "@" + day)) {
             downloadDao.updateDownloadCountDay(table, toolId, day);
@@ -46,6 +46,14 @@ public class DownloadService extends BaseService {
             }
             statistics.put(toolId + "@" + table + "@" + day, true);
         }
+    }
+
+    /**
+     * 通过工具ID 添加下载次数
+     */
+    public void addDownloadCount(String table, int toolId, int day, int count) {
+        downloadDao.addDownloadCount(table, toolId, count);
+        downloadDao.saveDownloadCountDay(table, toolId, day, count);
     }
 
 }

@@ -15,7 +15,7 @@ public class Mysql2RedisTask {
     @Autowired
     private PropertiesService propertiesService;
 	
-	@Scheduled(fixedRate = 60000)
+//	@Scheduled(fixedRate = 60000)
 	public void mysql2redis() {
 		toolboxService.searchToolsUpdate2Redis();
 		propertiesService.searchAppConfigArrayAndUpdate2Redis();

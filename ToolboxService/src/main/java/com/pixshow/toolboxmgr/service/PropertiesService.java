@@ -21,8 +21,6 @@ public class PropertiesService {
     private Log         log = LogFactory.getLog(PropertiesService.class);
     @Autowired
     PropertiesDao       propertyDao;
-    @Autowired
-    RedisToolboxService redisToolboxService;
 
     private static final String[] keys = new String[] { "APP1_CONFIG", "APP2_CONFIG", "APP3_CONFIG", "APP4_CONFIG", "APP5_CONFIG" };
 
@@ -65,13 +63,4 @@ public class PropertiesService {
         propertyDao.setValue(key, value);
     }
 
-    public void searchAppConfigArrayAndUpdate2Redis() {
-        String rKey = "appConfig@APP_CONFIG";
-        List<String> list = this.getValue(keys);
-        try {
-            redisToolboxService.set(rKey, JSONArray.fromObject(list).toString());
-        } catch (Exception e) {
-            log.info(rKey + " to set redis error");
-        }
-    }
 }

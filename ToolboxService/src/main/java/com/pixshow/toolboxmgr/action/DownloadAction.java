@@ -90,7 +90,7 @@ public class DownloadAction extends BaseAction {
                 }
 
             }
-            //
+            //redis 统计
             redisToolboxService.downLoadStat(appId, diyId, code);
         } catch (Exception e) {
             throw new DoNotCatchException();

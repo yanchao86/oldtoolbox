@@ -1,7 +1,6 @@
 package com.pixshow.toolboxmgr.service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,7 @@ import com.pixshow.toolboxmgr.dao.CustomDao;
 public class CustomService {
 
     @Autowired
-    private CustomDao customDao;
+    private CustomDao         customDao;
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public String getConfig(String key) {
@@ -56,7 +55,8 @@ public class CustomService {
         } catch (Exception e) {
             return defaultValue;
         }
-        if (StringUtility.isNotEmpty(tmp)) return tmp;
+        if (StringUtility.isNotEmpty(tmp))
+            return tmp;
         return defaultValue;
     }
 

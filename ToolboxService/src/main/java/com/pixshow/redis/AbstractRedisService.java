@@ -1,5 +1,7 @@
 package com.pixshow.redis;
 
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +43,7 @@ public abstract class AbstractRedisService<K, V> {
         BoundValueOperations<K, V> valueOper = redisTemplate.boundValueOps(key);
         return valueOper.get();
     }
-
+    
     public void del(K key) {
         if (redisTemplate.hasKey(key)) {
             redisTemplate.delete(key);

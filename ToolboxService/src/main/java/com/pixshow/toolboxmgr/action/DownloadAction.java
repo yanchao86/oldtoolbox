@@ -97,19 +97,23 @@ public class DownloadAction extends BaseAction {
 
             }
             //
-            if (appId != null) {
-                downloadService.addDownloadCount("tb_diybox", diyId);
-            }
-            if (diyId != null) {
-                downloadService.addDownloadCount("tb_diybox", diyId);
-            }
-            if (StringUtility.isNotEmpty(code)) {
-                statService.pvStat(code, 1, new Date());
-            }
+            redisToolboxService.downLoadStat(appId, diyId, code);
         } catch (Exception e) {
             throw new DoNotCatchException();
         }
         return SUCCESS;
+    }
+
+    public void downLoadStat(Integer appId, Integer diyId, String code) {
+        if (appId != null) {
+            downloadService.addDownloadCount("tb_diybox", appId);
+        }
+        if (diyId != null) {
+            downloadService.addDownloadCount("tb_diybox", diyId);
+        }
+        if (StringUtility.isNotEmpty(code)) {
+            statService.pvStat(code, 1, new Date());
+        }
     }
 
     public Integer getAppId() {

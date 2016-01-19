@@ -27,21 +27,21 @@ public class BwkgServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String contentEncoding = request.getHeader("Content-Encoding");
-        ServletInputStream servletIn = request.getInputStream();
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        byte[] buf = new byte[1024];
-        int len = 0;
-        while ((len = servletIn.read(buf)) != -1) {
-            out.write(buf, 0, len);
-        }
-        byte[] rawData = out.toByteArray();
-        byte[] decryptData = CipherUtility.AES.decrypt(rawData, "dsjkfh824hnlkdfnmvo");
-        byte[] data = "gzip".equalsIgnoreCase(contentEncoding) ? ungzip(decryptData) : decryptData;
-        String result = new String(data, "UTF-8");
-
-        statService.bkw(result);
+//        String contentEncoding = request.getHeader("Content-Encoding");
+//        ServletInputStream servletIn = request.getInputStream();
+//
+//        ByteArrayOutputStream out = new ByteArrayOutputStream();
+//        byte[] buf = new byte[1024];
+//        int len = 0;
+//        while ((len = servletIn.read(buf)) != -1) {
+//            out.write(buf, 0, len);
+//        }
+//        byte[] rawData = out.toByteArray();
+//        byte[] decryptData = CipherUtility.AES.decrypt(rawData, "dsjkfh824hnlkdfnmvo");
+//        byte[] data = "gzip".equalsIgnoreCase(contentEncoding) ? ungzip(decryptData) : decryptData;
+//        String result = new String(data, "UTF-8");
+//
+//        statService.bkw(result);
         response.getWriter().print("{\"result\": 0}");
     }
 

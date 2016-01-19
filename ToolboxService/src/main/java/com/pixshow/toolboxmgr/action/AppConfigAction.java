@@ -28,134 +28,121 @@ import net.sf.json.JSONObject;
 @Namespace("/service")
 public class AppConfigAction extends BaseAction {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Autowired
-	private PropertiesService propertiesService;
-	@Autowired
-	private RedisToolboxService redisToolboxService;
+    @Autowired
+    private PropertiesService   propertiesService;
+    @Autowired
+    private RedisToolboxService redisToolboxService;
 
-	private Object result = null;
-	private static final String[] keys = new String[] { "APP1_CONFIG",
-			"APP2_CONFIG", "APP3_CONFIG", "APP4_CONFIG", "APP5_CONFIG" };
+    private Object                result = null;
+    private static final String[] keys   = new String[] { "APP1_CONFIG", "APP2_CONFIG", "APP3_CONFIG", "APP4_CONFIG", "APP5_CONFIG" };
 
-	@Action(value = "appConfig", results = { @Result(name = SUCCESS, type = "json", params = {
-			"root", "result" }) })
-	public String appConfig() {
-		this.result = new JSONObject();
-		boolean fromredis = false;
-		String rKey = "appConfig@APP_CONFIG";
-		List<String> list = null;
-		if (redisToolboxService.check(rKey)) {
-			try {
-				JSONArray arr = JSONArray.fromObject(redisToolboxService
-						.get(rKey));
-				list = new ArrayList<String>();
-				for (int i = 0; i < arr.size(); i++) {
-					list.add(arr.getString(i));
-				}
-				fromredis = true;
-			} catch (Exception e) {
-				log.info(rKey + " to jsonarr error");
-			}
-		}
-		if (!fromredis) {
-			list = propertiesService.getValue(keys);
-			try {
-				redisToolboxService.set(rKey, JSONArray.fromObject(list)
-						.toString());
-			} catch (Exception e) {
-				log.info(rKey + " to set redis error");
-			}
-		}
+    @Action(value = "appConfig", results = { @Result(name = SUCCESS, type = "json", params = { "root", "result" }) })
+    public String appConfig() {
+        this.result = new JSONObject();
+        boolean fromredis = false;
+        String rKey = "appConfig@APP_CONFIG";
+        List<String> list = null;
+        if (redisToolboxService.check(rKey)) {
+            try {
+                JSONArray arr = JSONArray.fromObject(redisToolboxService.get(rKey));
+                list = new ArrayList<String>();
+                for (int i = 0; i < arr.size(); i++) {
+                    list.add(arr.getString(i));
+                }
+                fromredis = true;
+            } catch (Exception e) {
+                log.info(rKey + " to jsonarr error");
+            }
+        }
+        if (!fromredis) {
+            list = propertiesService.getValue(keys);
+            try {
+                redisToolboxService.set(rKey, JSONArray.fromObject(list).toString());
+            } catch (Exception e) {
+                log.info(rKey + " to set redis error");
+            }
+        }
 
-		HttpServletRequest request = ServletActionContext.getRequest();
-		String query = request.getQueryString();
+        HttpServletRequest request = ServletActionContext.getRequest();
+        String query = request.getQueryString();
 
-		for (int i = 0; i < keys.length; i++) {
-			String code = keys[i];
-			code = code.substring(0, code.indexOf("_"));
-			if (list.get(i) == null) {
-				continue;
-			}
-			JSONObject json = JSONObject.fromObject(list.get(i));
-			if (StringUtility.isNotEmpty(query) && query.contains("FLASHLIGHT")) {
-				json.put("icon", "http://test.oss.aliyuncs.com/error.png");
-			} else {
-				json.put("icon",
-						ImageStorageTootl.getUrl(json.getString("icon")));
-			}
-			json.put("toolIcon",
-					ImageStorageTootl.getUrl(json.optString("toolIcon")));
-			JSONObject adjson = json.getJSONObject("toolbarAdvertisement");
-			adjson.put("icon",
-					ImageStorageTootl.getUrl(adjson.getString("icon")));
-			((JSONObject) result).put(code, json);
-		}
-		return SUCCESS;
-	}
+        for (int i = 0; i < keys.length; i++) {
+            String code = keys[i];
+            code = code.substring(0, code.indexOf("_"));
+            if (list.get(i) == null) {
+                continue;
+            }
+            JSONObject json = JSONObject.fromObject(list.get(i));
+            if (StringUtility.isNotEmpty(query) && query.contains("FLASHLIGHT")) {
+                json.put("icon", "http://test.oss.aliyuncs.com/error.png");
+            } else {
+                json.put("icon", ImageStorageTootl.getUrl(json.getString("icon")));
+            }
+            json.put("toolIcon", ImageStorageTootl.getUrl(json.optString("toolIcon")));
+            JSONObject adjson = json.getJSONObject("toolbarAdvertisement");
+            adjson.put("icon", ImageStorageTootl.getUrl(adjson.getString("icon")));
+            ((JSONObject) result).put(code, json);
+        }
+        return SUCCESS;
+    }
 
-	@Action(value = "appConfigArray", results = { @Result(name = SUCCESS, type = "json", params = {
-			"root", "result" }) })
-	public String appConfigArray() {
-		this.result = new JSONArray();
-		boolean fromredis = false;
-		List<String> list = null;
-		String rKey = "appConfig@APP_CONFIG";
-		if (redisToolboxService.check(rKey)) {
-			try {
-				JSONArray arr = JSONArray.fromObject(redisToolboxService
-						.get(rKey));
-				list = new ArrayList<String>();
-				for (int i = 0; i < arr.size(); i++) {
-					list.add(arr.getString(i));
-				}
-				fromredis = true;
-			} catch (Exception e) {
-				log.info(rKey + " to jsonarr error");
-			}
-		}
-		if (!fromredis) {
-			list = propertiesService.getValue(keys);
-			try {
-				redisToolboxService.set(rKey, JSONArray.fromObject(list)
-						.toString());
-			} catch (Exception e) {
-				log.info(rKey + " to set redis error");
-			}
-		}
-		HttpServletRequest request = ServletActionContext.getRequest();
-		String query = request.getQueryString();
-		for (int i = 0; i < keys.length; i++) {
-			String code = keys[i];
-			code = code.substring(0, code.indexOf("_"));
-			if (list.get(i) == null) {
-				continue;
-			}
-			JSONObject json = JSONObject.fromObject(list.get(i));
-			json.put("code", code);
-			if (StringUtility.isNotEmpty(query) && query.contains("FLASHLIGHT")) {
-				json.put("icon", "http://test.oss.aliyuncs.com/error.png");
-			} else {
-				json.put("icon",
-						ImageStorageTootl.getUrl(json.getString("icon")));
-			}
-			json.put("toolIcon",
-					ImageStorageTootl.getUrl(json.optString("toolIcon")));
-			JSONObject adjson = json.getJSONObject("toolbarAdvertisement");
-			adjson.put("icon",
-					ImageStorageTootl.getUrl(adjson.getString("icon")));
-			((JSONArray) result).add(json);
-		}
-		return SUCCESS;
-	}
+    @Action(value = "appConfigArray", results = { @Result(name = SUCCESS, type = "json", params = { "root", "result" }) })
+    public String appConfigArray() {
+        this.result = new JSONArray();
+        boolean fromredis = false;
+        List<String> list = null;
+        String rKey = "appConfig@APP_CONFIG";
+        if (redisToolboxService.check(rKey)) {
+            try {
+                JSONArray arr = JSONArray.fromObject(redisToolboxService.get(rKey));
+                list = new ArrayList<String>();
+                for (int i = 0; i < arr.size(); i++) {
+                    list.add(arr.getString(i));
+                }
+                fromredis = true;
+            } catch (Exception e) {
+                log.info(rKey + " to jsonarr error");
+            }
+        }
+        if (!fromredis) {
+            list = propertiesService.getValue(keys);
+            try {
+                redisToolboxService.set(rKey, JSONArray.fromObject(list).toString());
+            } catch (Exception e) {
+                log.info(rKey + " to set redis error");
+            }
+        }
+        HttpServletRequest request = ServletActionContext.getRequest();
+        String query = request.getQueryString();
+        for (int i = 0; i < keys.length; i++) {
+            String code = keys[i];
+            code = code.substring(0, code.indexOf("_"));
+            if (list.get(i) == null) {
+                continue;
+            }
+            JSONObject json = JSONObject.fromObject(list.get(i));
+            json.put("code", code);
+            if (StringUtility.isNotEmpty(query) && query.contains("FLASHLIGHT")) {
+                json.put("icon", "http://test.oss.aliyuncs.com/error.png");
+            } else {
+                json.put("icon", ImageStorageTootl.getUrl(json.getString("icon")));
+            }
+            json.put("toolIcon", ImageStorageTootl.getUrl(json.optString("toolIcon")));
+            JSONObject adjson = json.getJSONObject("toolbarAdvertisement");
+            adjson.put("icon", ImageStorageTootl.getUrl(adjson.getString("icon")));
+            ((JSONArray) result).add(json);
+        }
+        return SUCCESS;
+    }
 
-	public Object getResult() {
-		return result;
-	}
+    public Object getResult() {
+        return result;
+    }
 
-	public void setResult(Object result) {
-		this.result = result;
-	}
+    public void setResult(Object result) {
+        this.result = result;
+    }
 
 }

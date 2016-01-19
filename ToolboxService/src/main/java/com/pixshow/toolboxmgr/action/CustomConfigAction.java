@@ -8,9 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.Result;
@@ -21,27 +20,51 @@ import org.springframework.stereotype.Controller;
 import com.pixshow.framework.support.BaseAction;
 import com.pixshow.framework.utils.DateUtility;
 import com.pixshow.framework.utils.StringUtility;
+import com.pixshow.redis.RedisToolboxService;
 import com.pixshow.toolboxmgr.dao.CustomGridDao;
 import com.pixshow.toolboxmgr.service.CustomGridService;
 import com.pixshow.toolboxmgr.service.CustomService;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Controller
 @Scope("prototype")
 @Namespace("/service")
 public class CustomConfigAction extends BaseAction {
     private static final long serialVersionUID = 1L;
+    private final static Log  log              = LogFactory.getLog(CustomConfigAction.class);
 
     @Autowired
-    private CustomService     customService;
+    private CustomService       customService;
     @Autowired
-    private CustomGridService customGridService;
+    private CustomGridService   customGridService;
+    @Autowired
+    private RedisToolboxService redisToolboxService;
+
     /////////////////////////////////////////////////////////////
-    private String            code;
+    private String     code;
     /////////////////////////////////////////////////////////////
-    private JSONObject        result           = new JSONObject();
+    private JSONObject result = new JSONObject();
 
     @Action(value = "customConfig", results = { @Result(name = SUCCESS, type = "json", params = { "root", "result" }) })
     public String customConfig() throws Exception {
+        String rKey = "customConfig@" + code;
+        String res = redisToolboxService.get(rKey);
+        boolean fromRedis = false;
+        if (StringUtility.isNotEmpty(res)) {
+            try {
+                result = JSONObject.fromObject(res);
+                fromRedis = true;
+            } catch (Exception e) {
+                log.error("customConfig redis get " + rKey + " error");
+            }
+        }
+
+        if (fromRedis) {
+            return SUCCESS;
+        }
+
         String[] codes = StringUtility.split(code, ",");
         if (codes != null && codes.length > 0) {
             List<String> values = customService.getValue(codes);
@@ -58,9 +81,15 @@ public class CustomConfigAction extends BaseAction {
                 }
             }
         }
+        try {
+            redisToolboxService.set(rKey, result.toString());
+        } catch (Exception e) {
+            log.error("customConfig redis set " + rKey + " error");
+        }
+
         return SUCCESS;
     }
-    
+
     /**
      * 自定义配置中关联的表格
      */
@@ -69,7 +98,7 @@ public class CustomConfigAction extends BaseAction {
     private void getGridMap(Object data) {
         if (data instanceof JSONObject) {
             JSONObject config = (JSONObject) data;
-            if(config.isEmpty() || config.isNullObject()) {
+            if (config.isEmpty() || config.isNullObject()) {
                 return;
             }
             Iterator<String> it = config.keys();
@@ -94,11 +123,13 @@ public class CustomConfigAction extends BaseAction {
     /**
      * 自定义表格中关联的表格
      */
-    private static Map<String, List<String>> eachGridMap       = new HashMap<String, List<String>>();
+    private static Map<String, List<String>> eachGridMap = new HashMap<String, List<String>>();
 
     private void eachGrid(String gridTble) {
         String definition = customGridService.gridConfig(gridTble.replace(CustomGridDao.grid_table_prefix, ""));
-        if (StringUtility.isEmpty(definition)) { return; }
+        if (StringUtility.isEmpty(definition)) {
+            return;
+        }
 
         List<String> tables = new ArrayList<String>();
         JSONObject json = JSONObject.fromObject(definition);
@@ -118,7 +149,7 @@ public class CustomConfigAction extends BaseAction {
     private void getData(Object data) {
         if (data instanceof JSONObject) {
             JSONObject json = (JSONObject) data;
-            if(json.isEmpty() || json.isNullObject()) {
+            if (json.isEmpty() || json.isNullObject()) {
                 return;
             }
             Iterator<String> it = json.keys();

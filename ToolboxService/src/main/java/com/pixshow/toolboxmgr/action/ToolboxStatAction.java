@@ -44,8 +44,6 @@ public class ToolboxStatAction extends BaseAction {
     private static final long serialVersionUID = 1L;
     ////////////////////////////////////////////////////////
     @Autowired
-    private PropertiesService propertiesService;
-    @Autowired
     private StatService       statService;
     ////////////////////////////////////////////////////////
     @Deprecated
@@ -73,36 +71,35 @@ public class ToolboxStatAction extends BaseAction {
 
     @Action(value = "bmw", results = { @Result(name = SUCCESS, type = "json", params = { "root", "result" }) })
     public String bmw() {
-        try {
-            JSONObject json = JSONObject.fromObject(CipherUtility.AES.decrypt(flag, "dsjkfh824hnlkdfnmvo"));
-            String productCode = json.optString("productCode");
-            String productVersion = json.optString("productVersion");
-//            String sdkVersion = json.optString("sdkVersion");
-            String sdkVersion = json.optString("toolSdkVersion");
-
-            String macVal = json.optString("mac");
-            String codeVal = json.optString("code");
-            String typeVal = json.optString("type");
-            if ("uv".equals(typeVal)) {
-                if (StringUtility.isNotEmpty(productCode)) {
-                    statService.uvStat(codeVal, productCode, productVersion, sdkVersion, macVal, new Date());
-                }
-                statService.uvStat(macVal, codeVal, new Date());
-            } else {
-                if (StringUtility.isNotEmpty(productCode)) {
-                    statService.pvStat(codeVal, productCode, productVersion, sdkVersion, 1, new Date());
-                }
-                statService.pvStat(codeVal, 1, new Date());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            JSONObject json = JSONObject.fromObject(CipherUtility.AES.decrypt(flag, "dsjkfh824hnlkdfnmvo"));
+//            String productCode = json.optString("productCode");
+//            String productVersion = json.optString("productVersion");
+//            String sdkVersion = json.optString("toolSdkVersion");
+//
+//            String macVal = json.optString("mac");
+//            String codeVal = json.optString("code");
+//            String typeVal = json.optString("type");
+//            if ("uv".equals(typeVal)) {
+//                if (StringUtility.isNotEmpty(productCode)) {
+//                    statService.uvStat(codeVal, productCode, productVersion, sdkVersion, macVal, new Date());
+//                }
+//                statService.uvStat(macVal, codeVal, new Date());
+//            } else {
+//                if (StringUtility.isNotEmpty(productCode)) {
+//                    statService.pvStat(codeVal, productCode, productVersion, sdkVersion, 1, new Date());
+//                }
+//                statService.pvStat(codeVal, 1, new Date());
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         return SUCCESS;
     }
 
     @Action(value = "bkw", results = { @Result(name = SUCCESS, type = "json", params = { "root", "result" }) })
     public String bkw() {
-        statService.bkw(CipherUtility.AES.decrypt(flag, "dsjkfh824hnlkdfnmvo"));
+//        statService.bkw(CipherUtility.AES.decrypt(flag, "dsjkfh824hnlkdfnmvo"));
         return SUCCESS;
     }
 

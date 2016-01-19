@@ -9,8 +9,6 @@
  */
 package com.pixshow.toolboxmgr.action;
 
-import net.sf.json.JSONObject;
-
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.Result;
@@ -19,8 +17,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.pixshow.framework.support.BaseAction;
-import com.pixshow.toolboxmgr.service.DownloadService;
 import com.pixshow.toolboxmgr.service.PropertiesService;
+
+import net.sf.json.JSONObject;
 
 /**
  * 
@@ -39,8 +38,6 @@ public class ChannelToolSourceAction extends BaseAction {
     ////////////////////////////////////////////////////////
     @Autowired
     private PropertiesService propertiesService;
-    @Autowired
-    private DownloadService   downloadService;
     ////////////////////////////////////////////////////////
     private String            prefix           = "channel_";
     private String            code;

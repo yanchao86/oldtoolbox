@@ -9,15 +9,15 @@ import com.pixshow.toolboxmgr.service.ToolboxService;
 
 @Component
 public class Mysql2RedisTask {
-	
+
     @Autowired
-    private ToolboxService      toolboxService;
+    private ToolboxService    toolboxService;
     @Autowired
     private PropertiesService propertiesService;
-	
-//	@Scheduled(fixedRate = 60000)
-	public void mysql2redis() {
-		toolboxService.searchToolsUpdate2Redis();
-		propertiesService.searchAppConfigArrayAndUpdate2Redis();
-	}
+
+    @Scheduled(fixedRate = 1000 * 60)
+    public void mysql2redis() {
+        toolboxService.searchToolsUpdate2Redis();
+        propertiesService.searchAppConfigArrayAndUpdate2Redis();
+    }
 }

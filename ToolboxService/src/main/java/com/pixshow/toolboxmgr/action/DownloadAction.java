@@ -1,7 +1,5 @@
 package com.pixshow.toolboxmgr.action;
 
-import java.util.Date;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -13,13 +11,11 @@ import org.springframework.stereotype.Controller;
 import com.opensymphony.xwork2.ActionContext;
 import com.pixshow.framework.exception.api.DoNotCatchException;
 import com.pixshow.framework.support.BaseAction;
-import com.pixshow.framework.utils.StringUtility;
 import com.pixshow.redis.RedisToolboxService;
 import com.pixshow.toolboxmgr.bean.DiyboxBean;
 import com.pixshow.toolboxmgr.bean.ToolboxBean;
 import com.pixshow.toolboxmgr.service.DiyboxService;
 import com.pixshow.toolboxmgr.service.DownloadService;
-import com.pixshow.toolboxmgr.service.StatService;
 import com.pixshow.toolboxmgr.service.ToolboxService;
 
 @Controller
@@ -34,8 +30,6 @@ public class DownloadAction extends BaseAction {
     private ToolboxService      toolboxService;
     @Autowired
     private DiyboxService       diyboxService;
-    @Autowired
-    private StatService         statService;
     @Autowired
     private RedisToolboxService redisToolboxService;
     // ///////////////////////////////////////////////////////////////
@@ -102,18 +96,6 @@ public class DownloadAction extends BaseAction {
             throw new DoNotCatchException();
         }
         return SUCCESS;
-    }
-
-    public void downLoadStat(Integer appId, Integer diyId, String code) {
-        if (appId != null) {
-            downloadService.addDownloadCount("tb_diybox", appId);
-        }
-        if (diyId != null) {
-            downloadService.addDownloadCount("tb_diybox", diyId);
-        }
-        if (StringUtility.isNotEmpty(code)) {
-            statService.pvStat(code, 1, new Date());
-        }
     }
 
     public Integer getAppId() {

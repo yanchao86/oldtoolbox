@@ -19,8 +19,6 @@ import com.pixshow.framework.utils.StringUtility;
 import com.pixshow.toolboxmgr.service.DownloadService;
 import com.pixshow.toolboxmgr.service.StatService;
 
-import net.sf.json.JSONArray;
-
 @Service
 public class RedisToolboxService extends AbstractRedisService<String, String> {
     private final static Log log = LogFactory.getLog(RedisToolboxService.class);
@@ -47,11 +45,10 @@ public class RedisToolboxService extends AbstractRedisService<String, String> {
         }
     }
 
-    @Scheduled(fixedRate = 1000 * 5)
+    @Scheduled(fixedRate = 1000 * 60 * 30)
     public void mysql2redis() {
         String pattern = "downLoadStat@*";
         Set<String> keys = redisTemplate.keys(pattern);
-        System.out.println("stat start, keys=" + JSONArray.fromObject(keys).toString());
         Iterator<String> it = keys.iterator();
         while (it.hasNext()) {
             try {

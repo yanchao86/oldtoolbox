@@ -2,6 +2,7 @@ package com.pixshow.toolboxmgr.service;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -28,6 +29,10 @@ public class DownloadService extends BaseService {
      */
     public String getUrl(String table, int toolId) {
         return downloadDao.getUrl(table, toolId);
+    }
+
+    public List<Map<String, Object>> getUrls(String table) {
+        return downloadDao.getUrls(table);
     }
 
     /**

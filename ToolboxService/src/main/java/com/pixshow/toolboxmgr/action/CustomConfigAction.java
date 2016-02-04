@@ -82,7 +82,7 @@ public class CustomConfigAction extends BaseAction {
             }
         }
         try {
-            redisToolboxService.set(rKey, result.toString(), 1000 * 3);
+            redisToolboxService.set(rKey, result.toString(), 1000 * 60 * 10);
         } catch (Exception e) {
             log.error("customConfig redis set " + rKey + " error");
         }

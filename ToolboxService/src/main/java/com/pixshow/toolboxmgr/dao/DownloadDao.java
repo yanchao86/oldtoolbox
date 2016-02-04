@@ -17,7 +17,10 @@ public class DownloadDao extends BaseDao {
         List<Map<String, Object>> list = getJdbcTemplate().queryForList("select downloadUrl from " + table + " where id=?", id);
         return list.size() > 0 ? list.get(0).get("downloadUrl").toString() : "";
     }
-
+    
+    public List<Map<String, Object>> getUrls(String table) {
+        return getJdbcTemplate().queryForList("select id, downloadUrl, packageName from " + table);
+    }
     /**
      * 通过工具ID 添加下载次数
      */

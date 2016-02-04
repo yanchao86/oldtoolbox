@@ -16,12 +16,12 @@
 	</appender>
 
 	<logger name="com.pixshow" additivity="false">
-		<priority value="debug" />
+		<priority value="INFO" />
 		<appender-ref ref="Console" />
 	</logger>
 
 	<logger name="com.pixshow.framework.ddb.internal.DelegatingPreparedStatement" additivity="false">
-		<priority value="debug" />
+		<priority value="INFO" />
 		<appender-ref ref="Console" />
 	</logger>
 	<root>

@@ -6,7 +6,7 @@
 	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
  <context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath:config/framework/spring.xml;</param-value>
+		<param-value>classpath:config/spring.xml;</param-value>
 	</context-param>
 
 	<listener>
@@ -22,7 +22,7 @@
 		</init-param>
 		<init-param>
 			<param-name>expenseThreshold</param-name>
-			<param-value>0</param-value>
+			<param-value>3000</param-value>
 		</init-param>
 	</filter>
 

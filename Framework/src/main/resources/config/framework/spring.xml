@@ -19,9 +19,11 @@
 
 	<context:annotation-config />
 	<context:spring-configured />
-	<task:annotation-driven scheduler="qbScheduler"
-		mode="proxy" />
+	<!-- 
+	<task:annotation-driven scheduler="qbScheduler" mode="proxy" />
 	<task:scheduler id="qbScheduler" pool-size="10" />
+	 -->
+	
 	<context:component-scan base-package="com.pixshow"
 		annotation-config="false"
 		name-generator="com.pixshow.framework.ext.spring.ClassFullNameAnnotationBeanNameGenerator" />

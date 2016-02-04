@@ -1,0 +1,10 @@
+*.class
+classes/
+bin/
+.settings/
+.progect
+.classpath
+build/
+release/
+
+

@@ -63,8 +63,8 @@ public class GameOutGlitterAction extends BaseAction {
         bean.setPicture(pictureUrl);
         bean.setUseType(GameGlitter.useType.unUse);
         bean.setIndexNum(indexNum);
-        bean.setPackageName(pictureUrl);
-        bean.setVersionCode(pictureUrl);
+        bean.setPackageName(packageName);
+        bean.setVersionCode(versionCode);
         gameOutGlitterService.save(bean);
         return SUCCESS;
     }
@@ -93,8 +93,8 @@ public class GameOutGlitterAction extends BaseAction {
         bean.setStartTime(DateUtility.parseDate(startTime, "yyyy-MM-dd"));
         bean.setPicture(pictureUrl);
         bean.setIndexNum(indexNum);
-        bean.setPackageName(pictureUrl);
-        bean.setVersionCode(pictureUrl);
+        bean.setPackageName(packageName);
+        bean.setVersionCode(versionCode);
         gameOutGlitterService.update(bean);
         return SUCCESS;
     }

@@ -83,11 +83,11 @@ function delGlitter(id, useType) {
 			</td>
 		</tr>
 		<tr>
-			<td>包名</td>
+			<th>包名</th>
 			<td><input type="text" name="packageName" size="44" value="<%=gameGlitter.getPackageName()%>"></td>
 		</tr>
 		<tr>
-			<td>版本号</td>
+			<th>版本号</th>
 			<td><input type="text" name="versionCode" size="44" value="<%=gameGlitter.getVersionCode()%>"></td>
 		</tr>			
 		<tr>

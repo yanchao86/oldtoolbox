@@ -113,8 +113,8 @@ function delGlitter(id, useType) {
 %>
 	<tr>
 		<td><%=bean.getIndexNum()%></td>
-		<td><%=bean.getPackageName()+" / "+bean.getVersionCode()%></td>
 		<td><img src="<%=bean.getPicture()%>"></td>
+		<td><%=bean.getPackageName()+" / "+bean.getVersionCode()%></td>
 		<td>
 		<%
 		    out.print(bean.getButtonName()+"【");

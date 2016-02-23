@@ -83,6 +83,14 @@ function delGlitter(id, useType) {
 			</td>
 		</tr>
 		<tr>
+			<td>包名</td>
+			<td><input type="text" name="packageName" size="44" value="<%=gameGlitter.getPackageName()%>"></td>
+		</tr>
+		<tr>
+			<td>版本号</td>
+			<td><input type="text" name="versionCode" size="44" value="<%=gameGlitter.getVersionCode()%>"></td>
+		</tr>			
+		<tr>
 			<th>优先级</th>
 			<td><input type="text" name="indexNum" id="indexNum" value="<%=gameGlitter.getIndexNum()%>">(数值高的排前)</td>
 		</tr>

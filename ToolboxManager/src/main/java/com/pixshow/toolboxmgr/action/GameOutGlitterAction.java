@@ -28,17 +28,19 @@ public class GameOutGlitterAction extends BaseAction {
     @Autowired
     private GameOutGlitterService gameOutGlitterService;
 
-    private File                  picture;
-    private String                pictureFileName;
-    private String                buttonName;
-    private int                   buttonType;
-    private String                buttonUrl;
-    private String                startTime;
-    private String                endTime;
-    private int                   indexNum;
-    private int                   id;
+    private File   picture;
+    private String pictureFileName;
+    private String buttonName;
+    private int    buttonType;
+    private String buttonUrl;
+    private String startTime;
+    private String endTime;
+    private String packageName;
+    private String versionCode;
+    private int    indexNum;
+    private int    id;
 
-    private Map<String, Object>   result           = new HashMap<String, Object>();
+    private Map<String, Object> result = new HashMap<String, Object>();
 
     @Action(value = "outGlitter", results = { @Result(name = SUCCESS, location = "/game/outGlitter.jsp") })
     public String outGlitter() {
@@ -61,6 +63,8 @@ public class GameOutGlitterAction extends BaseAction {
         bean.setPicture(pictureUrl);
         bean.setUseType(GameGlitter.useType.unUse);
         bean.setIndexNum(indexNum);
+        bean.setPackageName(pictureUrl);
+        bean.setVersionCode(pictureUrl);
         gameOutGlitterService.save(bean);
         return SUCCESS;
     }
@@ -89,6 +93,8 @@ public class GameOutGlitterAction extends BaseAction {
         bean.setStartTime(DateUtility.parseDate(startTime, "yyyy-MM-dd"));
         bean.setPicture(pictureUrl);
         bean.setIndexNum(indexNum);
+        bean.setPackageName(pictureUrl);
+        bean.setVersionCode(pictureUrl);
         gameOutGlitterService.update(bean);
         return SUCCESS;
     }
@@ -115,6 +121,22 @@ public class GameOutGlitterAction extends BaseAction {
     public String restoreOutGlitter() {
         gameOutGlitterService.restore(id);
         return SUCCESS;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public String getVersionCode() {
+        return versionCode;
+    }
+
+    public void setVersionCode(String versionCode) {
+        this.versionCode = versionCode;
     }
 
     public File getPicture() {

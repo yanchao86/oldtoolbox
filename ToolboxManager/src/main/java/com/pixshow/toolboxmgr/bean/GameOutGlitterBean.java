@@ -9,6 +9,8 @@ public class GameOutGlitterBean extends BaseBean {
     private int               id;
     private String            picture;
     private String            buttonName;
+    private String            packageName;
+    private String            versionCode;
     private int               buttonType;
     private String            buttonUrl;
     private Date              startTime;
@@ -95,6 +97,22 @@ public class GameOutGlitterBean extends BaseBean {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public String getVersionCode() {
+        return versionCode;
+    }
+
+    public void setVersionCode(String versionCode) {
+        this.versionCode = versionCode;
     }
 
 }

@@ -80,6 +80,14 @@ function delGlitter(id, useType) {
 			</td>
 		</tr>
 		<tr>
+			<td>包名</td>
+			<td><input type="text" name="packageName" size="44"></td>
+		</tr>
+		<tr>
+			<td>版本号</td>
+			<td><input type="text" name="versionCode" size="44"></td>
+		</tr>		
+		<tr>
 			<th>优先级</th>
 			<td><input type="text" name="indexNum" id="indexNum">(数值高的排前)</td>
 		</tr>
@@ -93,6 +101,7 @@ function delGlitter(id, useType) {
 	<tr>
 		<th>优先级</th>
 		<th>图片</th>
+		<th>包名/版本号</th>
 		<th>按钮名称</th>
 		<th>按钮链接</th>
 		<th>执行时间</th>
@@ -104,6 +113,7 @@ function delGlitter(id, useType) {
 %>
 	<tr>
 		<td><%=bean.getIndexNum()%></td>
+		<td><%=bean.getPackageName()+" / "+bean.getVersionCode()%></td>
 		<td><img src="<%=bean.getPicture()%>"></td>
 		<td>
 		<%

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="pixshow" default="main" basedir=".">
+
+	<import file="build.xml" />
+
+	<fileset id="patch" dir="build">
+		<include name="WEB-INF/lib/Framework.jar" />
+		<include name="WEB-INF/lib/${appJarName}.jar" />
+		<!--<include name="**/*" />-->
+	</fileset>
+
+	<target name="main" depends="release">
+		<scp todir="root@111.13.131.50:/program/allweb/tomcat_toolbox_server/webapps/ROOT/" password="f8v2x4s7" trust="true">
+			<fileset refid="patch" />
+		</scp>
+		<antcall target="clean" />
+	</target>
+	
+</project>

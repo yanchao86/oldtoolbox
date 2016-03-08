@@ -110,20 +110,26 @@ public class HttpUtility {
         }
         try {
             int statusCode = httpClient.executeMethod(method);
-            if (statusCode == HttpStatus.SC_OK) { return method.getResponseBodyAsString(); }
+            if (statusCode == HttpStatus.SC_OK) {
+                return method.getResponseBodyAsString();
+            }
             if ((statusCode == HttpStatus.SC_MOVED_TEMPORARILY) || (statusCode == HttpStatus.SC_MOVED_PERMANENTLY) || (statusCode == HttpStatus.SC_SEE_OTHER) || (statusCode == HttpStatus.SC_TEMPORARY_REDIRECT)) {
                 Header header = method.getResponseHeader("location");
-                if (header != null) { return post(header.getValue(), params, charset); }
+                if (header != null) {
+                    return post(header.getValue(), params, charset);
+                }
             }
         } catch (Exception e) {
             log.error("请求地址错误:" + url, e);
         } finally {
             try {
-                if (method != null) method.releaseConnection();
+                if (method != null)
+                    method.releaseConnection();
             } catch (Exception e) {
             }
             try {
-                if (connectionManager != null) connectionManager.shutdown();
+                if (connectionManager != null)
+                    connectionManager.shutdown();
             } catch (Exception e) {
             }
         }
@@ -197,16 +203,20 @@ public class HttpUtility {
         try {
 
             int statusCode = httpClient.executeMethod(method);
-            if (statusCode == HttpStatus.SC_OK) { return method.getResponseBodyAsString(); }
+            if (statusCode == HttpStatus.SC_OK) {
+                return method.getResponseBodyAsString();
+            }
         } catch (Exception e) {
             log.error("请求地址错误:" + url, e);
         } finally {
             try {
-                if (method != null) method.releaseConnection();
+                if (method != null)
+                    method.releaseConnection();
             } catch (Exception e) {
             }
             try {
-                if (connectionManager != null) connectionManager.shutdown();
+                if (connectionManager != null)
+                    connectionManager.shutdown();
             } catch (Exception e) {
             }
         }
@@ -227,6 +237,7 @@ public class HttpUtility {
     }
 
     public static String upload(String url, Map<String, String> params, Map<String, String> headers, List<FilePart> files, String charset) {
+        log.error("upload succeess : " + url);
         SimpleHttpConnectionManager connectionManager = new SimpleHttpConnectionManager();
         HttpClient httpClient = new HttpClient(connectionManager);
         httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(5000);
@@ -256,17 +267,27 @@ public class HttpUtility {
                 }
             }
             int statusCode = httpClient.executeMethod(method);
-            if (statusCode == HttpStatus.SC_OK) { return method.getResponseBodyAsString(); }
+            if (statusCode == HttpStatus.SC_OK) {
+                log.error("upload succeess : " + url + ", HttpStatus=" + statusCode);
+                return method.getResponseBodyAsString();
+            } else {
+                log.error("upload error : " + url + ", HttpStatus=" + statusCode);
+            }
         } catch (Exception e) {
-            log.error("请求地址错误:" + url, e);
+            log.error("upload error : " + url, e);
         } finally {
             try {
-                if (method != null) method.releaseConnection();
+                if (method != null) {
+                    method.releaseConnection();
+                }
             } catch (Exception e) {
+                e.printStackTrace();
             }
             try {
-                if (connectionManager != null) connectionManager.shutdown();
+                if (connectionManager != null)
+                    connectionManager.shutdown();
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return null;

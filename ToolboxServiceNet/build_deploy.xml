@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="pixshow" default="main" basedir=".">
+
+	<import file="build.xml" />
+
+	<fileset id="patch" dir="build">
+		<include name="**/*" />
+		<!--
+		<include name="WEB-INF/lib/Framework.jar" />
+		<include name="WEB-INF/lib/${appJarName}.jar" />
+		-->
+		<!--<include name="WEB-INF/classes/config/config_storage.properties" />-->
+		<!--<include name="**/*.xml" />-->
+	</fileset>
+
+	<tstamp>
+		<format property="backup-version" pattern="yyyyMMddHHmm" />
+	</tstamp>
+
+	<target name="deploy1">
+		<property name="host" value="idoproxy.chinacloudapp.cn" />
+		<property name="username" value="toolbox" />
+		<property name="password" value="tooLBox!iDO131" />
+		<property name="deployPath" value="/home/toolbox/Projects/tomcat/tomcat6-toolbox-8081/webapps/ROOT/" />
+		<property name="backupPath" value="/program/allweb/tomcat_a/webapps_bak/" />
+
+		<!-- 备份 -->
+		<!--
+		<sshexec host="${host}" username="${username}" password="${password}" command="cd ${deployPath};zip -r ${backupPath}${backup-version} ./*" trust="true" />
+		-->
+		<!-- 发布 -->
+		<scp todir="${username}@${host}:${deployPath}" password="${password}" trust="true">
+			<fileset refid="patch" />
+		</scp>
+
+	</target>
+	
+	<target name="deploy2">
+		<property name="host" value="idoproxy.chinacloudapp.cn" />
+		<property name="username" value="toolbox" />
+		<property name="password" value="tooLBox!iDO526" />
+		<property name="deployPath" value="/home/toolbox/Projects/tomcat/tomcat6-toolbox-8081/webapps/ROOT/" />
+		<property name="backupPath" value="/program/allweb/tomcat_d/webapps_bak/" />
+
+		<!-- 备份 -->
+		<!--
+		<sshexec host="${host}" username="${username}" password="${password}" command="cd ${deployPath};zip -r ${backupPath}${backup-version} ./*" trust="true" />
+		-->
+		<!-- 发布 -->
+		<scp todir="${username}@${host}:${deployPath}" password="${password}" trust="true">
+			<fileset refid="patch" />
+		</scp>
+
+	</target>
+
+
+	<target name="main" depends="release">
+		<antcall target="deploy1" />
+		<!--
+		<antcall target="deploy2" />
+		-->
+	</target>
+</project>

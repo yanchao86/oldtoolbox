@@ -5,7 +5,9 @@
 <struts>
 
 	<bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest" name="DiskFileItemMultiPartRequest" class="com.pixshow.framework.ext.struts.DiskFileItemMultiPartRequest" scope="default" />
-
+	<!--	idotest@configure1.cloudapp.net 这台服务器后台专用 
+	<constant name="struts.multipart.saveDir" value="/home/idotest/Projects/tomcat/tomcat6-toolboxmanager-8083/temp"/>
+	 -->
 	<constant name="struts.convention.default.parent.package" value="default" />
 	<constant name="struts.convention.result.path" value="/" />
 	<constant name="struts.convention.exclude.parentClassLoader" value="false" />

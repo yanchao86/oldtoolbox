@@ -1,7 +1,6 @@
 package com.pixshow.framework.support.test;
 
 import org.apache.struts2.StrutsJUnit4TestCase;
-import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

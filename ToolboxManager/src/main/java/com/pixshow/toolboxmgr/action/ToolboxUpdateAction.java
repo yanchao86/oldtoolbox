@@ -1,18 +1,9 @@
 package com.pixshow.toolboxmgr.action;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
 import java.util.UUID;
-
-import javax.imageio.ImageIO;
-import javax.servlet.ServletContext;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.StatusLine;
@@ -24,19 +15,10 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.Result;
-import org.python.antlr.PythonParser.file_input_return;
-import org.python.antlr.PythonParser.return_stmt_return;
-import org.python.antlr.PythonParser.varargslist_return;
-import org.python.modules.synchronize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.context.ContextLoader;
-import org.springframework.web.util.WebUtils;
 
-import redis.clients.jedis.Jedis;
-
-import com.kenai.jffi.Function;
 import com.pixshow.framework.exception.api.LogicException;
 import com.pixshow.framework.support.BaseAction;
 import com.pixshow.framework.utils.FileUtility;
@@ -46,10 +28,12 @@ import com.pixshow.toolboxmgr.service.PropertiesService;
 import com.pixshow.toolboxmgr.service.ToolboxService;
 import com.pixshow.toolboxmgr.tools.ImageCompressUtil;
 import com.pixshow.toolboxmgr.tools.ImageStorageTootl;
-import com.pixshow.toolboxmgr.tools.PngCompressUtil;
 import com.pixshow.toolboxmgr.tools.RedisFactory;
 import com.pixshow.toolboxmgr.tools.RedisUtil;
-import com.sun.istack.internal.FinalArrayList;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import redis.clients.jedis.Jedis;
 
 @Controller
 @Scope("prototype")
@@ -128,7 +112,11 @@ public class ToolboxUpdateAction extends BaseAction {
 //			}).start();
 //		}
 	}
-
+/**
+ * http://balance2.chinacloudapp.cn
+ * http://apk.idotools.com
+ * 
+ */
 	@Action(value = "toolInsert", results = { @Result(name = SUCCESS, type = "redirectAction", location = "toolSearch") })
 	public String toolInsert() {
 		if(!checkDownloadUrl(downloadUrl)){

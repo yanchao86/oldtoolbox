@@ -43,12 +43,7 @@ import javax.crypto.EncryptedPrivateKeyInfo;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-import sun.misc.BASE64Encoder;
-import sun.security.pkcs.ContentInfo;
-import sun.security.pkcs.PKCS7;
-import sun.security.pkcs.SignerInfo;
-import sun.security.x509.AlgorithmId;
-import sun.security.x509.X500Name;
+import org.apache.commons.net.util.Base64;
 
 public class ApkSignUtils {
 
@@ -59,11 +54,11 @@ public class ApkSignUtils {
         public byte[] handle(String name, byte[] data);
     }
 
-    private static final String MANIFEST_MANIFEST_VERSION = "1.0";
+    private static final String MANIFEST_MANIFEST_VERSION  = "1.0";
     private static final String MANIFEST_SIGNATURE_VERSION = "1.0";
-    private static final String MANIFEST_CREATED_BY = "1.0 (dotools sign apk)";
+    private static final String MANIFEST_CREATED_BY        = "1.0 (dotools sign apk)";
 
-    private static final String CERT_SF_NAME = "META-INF/CERT.SF";
+    private static final String CERT_SF_NAME  = "META-INF/CERT.SF";
     private static final String CERT_RSA_NAME = "META-INF/CERT.RSA";
 
     private static final String OTACERT_NAME = "META-INF/com/android/otacert";
@@ -166,7 +161,6 @@ public class ApkSignUtils {
             main.putValue("Created-By", MANIFEST_CREATED_BY);
         }
 
-        BASE64Encoder base64 = new BASE64Encoder();
         MessageDigest md = MessageDigest.getInstance("SHA1");
 
         // We sort the input entries by name, and add them to the
@@ -200,9 +194,10 @@ public class ApkSignUtils {
                     }
                 }
                 Attributes attr = null;
-                if (input != null) attr = input.getAttributes(name);
+                if (input != null)
+                    attr = input.getAttributes(name);
                 attr = attr != null ? new Attributes(attr) : new Attributes();
-                attr.putValue("SHA1-Digest", base64.encode(md.digest()));
+                attr.putValue("SHA1-Digest", Base64.encodeBase64String(md.digest()));
                 output.getEntries().put(name, attr);
             }
         }
@@ -218,7 +213,6 @@ public class ApkSignUtils {
      * easier to get at.)
      */
     private static void addOtacert(JarOutputStream outputJar, File publicKeyFile, long timestamp, Manifest manifest) throws IOException, GeneralSecurityException {
-        BASE64Encoder base64 = new BASE64Encoder();
         MessageDigest md = MessageDigest.getInstance("SHA1");
 
         JarEntry je = new JarEntry(OTACERT_NAME);
@@ -234,14 +228,14 @@ public class ApkSignUtils {
         input.close();
 
         Attributes attr = new Attributes();
-        attr.putValue("SHA1-Digest", base64.encode(md.digest()));
+        attr.putValue("SHA1-Digest", Base64.encodeBase64String(md.digest()));
         manifest.getEntries().put(OTACERT_NAME, attr);
     }
 
     /** Write to another stream and also feed it to the Signature object. */
     private static class SignatureOutputStream extends FilterOutputStream {
         private Signature mSignature;
-        private int mCount;
+        private int       mCount;
 
         public SignatureOutputStream(OutputStream out, Signature sig) {
             super(out);
@@ -283,14 +277,13 @@ public class ApkSignUtils {
         main.putValue("Signature-Version", MANIFEST_SIGNATURE_VERSION);
         main.putValue("Created-By", MANIFEST_CREATED_BY);
 
-        BASE64Encoder base64 = new BASE64Encoder();
         MessageDigest md = MessageDigest.getInstance("SHA1");
         PrintStream print = new PrintStream(new DigestOutputStream(new ByteArrayOutputStream(), md), true, "UTF-8");
 
         // Digest of the entire manifest
         manifest.write(print);
         print.flush();
-        main.putValue("SHA1-Digest-Manifest", base64.encode(md.digest()));
+        main.putValue("SHA1-Digest-Manifest", Base64.encodeBase64String(md.digest()));
 
         Map<String, Attributes> entries = manifest.getEntries();
         for (Map.Entry<String, Attributes> entry : entries.entrySet()) {
@@ -303,7 +296,7 @@ public class ApkSignUtils {
             print.flush();
 
             Attributes sfAttr = new Attributes();
-            sfAttr.putValue("SHA1-Digest", base64.encode(md.digest()));
+            sfAttr.putValue("SHA1-Digest", Base64.encodeBase64String(md.digest()));
             sf.getEntries().put(entry.getKey(), sfAttr);
         }
 
@@ -321,11 +314,21 @@ public class ApkSignUtils {
 
     /** Write a .RSA file with a digital signature. */
     private static void writeSignatureBlock(Signature signature, X509Certificate publicKey, OutputStream out) throws IOException, GeneralSecurityException {
-        SignerInfo signerInfo = new SignerInfo(new X500Name(publicKey.getIssuerX500Principal().getName()), publicKey.getSerialNumber(), AlgorithmId.get("SHA1"), AlgorithmId.get("RSA"), signature.sign());
-
-        PKCS7 pkcs7 = new PKCS7(new AlgorithmId[] { AlgorithmId.get("SHA1") }, new ContentInfo(ContentInfo.DATA_OID, null), new X509Certificate[] { publicKey }, new SignerInfo[] { signerInfo });
-
-        pkcs7.encodeSignedData(out);
+//        SignerInfo signerInfo = new SignerInfo(//
+//                new X500Name(publicKey.getIssuerX500Principal().getName()), //
+//                publicKey.getSerialNumber(), //
+//                AlgorithmId.get("SHA1"), //
+//                AlgorithmId.get("RSA"), // 
+//                signature.sign());
+//
+//        PKCS7 pkcs7 = new PKCS7(//
+//                new AlgorithmId[] { AlgorithmId.get("SHA1") }, //
+//                new ContentInfo(ContentInfo.DATA_OID, null), //
+//                new X509Certificate[] { publicKey }, //
+//                new SignerInfo[] { signerInfo }//
+//        );
+//
+//        pkcs7.encodeSignedData(out);
     }
 
     private static void signWholeOutputFile(byte[] zipData, OutputStream outputStream, X509Certificate publicKey, PrivateKey privateKey) throws IOException, GeneralSecurityException {
@@ -333,7 +336,9 @@ public class ApkSignUtils {
         // For a zip with no archive comment, the
         // end-of-central-directory record will be 22 bytes long, so
         // we expect to find the EOCD marker 22 bytes from the end.
-        if (zipData[zipData.length - 22] != 0x50 || zipData[zipData.length - 21] != 0x4b || zipData[zipData.length - 20] != 0x05 || zipData[zipData.length - 19] != 0x06) { throw new IllegalArgumentException("zip data already has an archive comment"); }
+        if (zipData[zipData.length - 22] != 0x50 || zipData[zipData.length - 21] != 0x4b || zipData[zipData.length - 20] != 0x05 || zipData[zipData.length - 19] != 0x06) {
+            throw new IllegalArgumentException("zip data already has an archive comment");
+        }
 
         Signature signature = Signature.getInstance("SHA1withRSA");
         signature.initSign(privateKey);
@@ -350,7 +355,9 @@ public class ApkSignUtils {
         temp.write(0);
         writeSignatureBlock(signature, publicKey, temp);
         int total_size = temp.size() + 6;
-        if (total_size > 0xffff) { throw new IllegalArgumentException("signature is too big for ZIP file comment"); }
+        if (total_size > 0xffff) {
+            throw new IllegalArgumentException("signature is too big for ZIP file comment");
+        }
         // signature starts this many bytes from the end of the file
         int signature_start = total_size - message.length - 1;
         temp.write(signature_start & 0xff);
@@ -375,7 +382,9 @@ public class ApkSignUtils {
         // let's catch it here if it does.
         byte[] b = temp.toByteArray();
         for (int i = 0; i < b.length - 3; ++i) {
-            if (b[i] == 0x50 && b[i + 1] == 0x4b && b[i + 2] == 0x05 && b[i + 3] == 0x06) { throw new IllegalArgumentException("found spurious EOCD header at " + i); }
+            if (b[i] == 0x50 && b[i + 1] == 0x4b && b[i + 2] == 0x05 && b[i + 3] == 0x06) {
+                throw new IllegalArgumentException("found spurious EOCD header at " + i);
+            }
         }
 
         outputStream.write(zipData, 0, zipData.length - 2);
@@ -497,8 +506,10 @@ public class ApkSignUtils {
             System.exit(1);
         } finally {
             try {
-                if (inputJar != null) inputJar.close();
-                if (outputFile != null) outputFile.close();
+                if (inputJar != null)
+                    inputJar.close();
+                if (outputFile != null)
+                    outputFile.close();
             } catch (IOException e) {
                 e.printStackTrace();
                 System.exit(1);

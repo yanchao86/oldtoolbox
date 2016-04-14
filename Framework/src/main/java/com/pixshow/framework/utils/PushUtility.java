@@ -2,8 +2,6 @@ package com.pixshow.framework.utils;
 
 import java.util.Map;
 
-import net.sf.json.JSONObject;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -18,6 +16,8 @@ import com.baidu.yun.channel.model.PushUnicastMessageResponse;
 import com.baidu.yun.channel.model.SetTagRequest;
 import com.baidu.yun.core.log.YunLogEvent;
 import com.baidu.yun.core.log.YunLogHandler;
+
+import net.sf.json.JSONObject;
 
 public class PushUtility {
     private static Log log = LogFactory.getLog(PushUtility.class);

@@ -6,8 +6,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.python.antlr.PythonParser.return_stmt_return;
-import org.python.antlr.PythonParser.varargslist_return;
 import org.springframework.stereotype.Repository;
 
 import com.pixshow.framework.support.BaseDao;
@@ -28,7 +26,11 @@ public class ToolboxDao extends BaseDao {
 	 * 添加包名表
 	 */
 	public void insertPackage(int toolboxId, String packageName, Date createDate) {
-		insert("INSERT INTO tb_toolbox_package(toolboxId,packageName,createDate) VALUES(?,?,?)", toolboxId, packageName, createDate);
+	    try {
+	        insert("INSERT INTO tb_toolbox_package(toolboxId,packageName,createDate) VALUES(?,?,?)", toolboxId, packageName, createDate);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
 	}
 
 	/**

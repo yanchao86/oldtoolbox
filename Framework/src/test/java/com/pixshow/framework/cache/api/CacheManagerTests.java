@@ -11,9 +11,6 @@ package com.pixshow.framework.cache.api;
 
 import java.util.Date;
 
-import com.pixshow.framework.cache.api.Cache;
-import com.pixshow.framework.cache.api.CacheManager;
-
 /**
  * 
  * 

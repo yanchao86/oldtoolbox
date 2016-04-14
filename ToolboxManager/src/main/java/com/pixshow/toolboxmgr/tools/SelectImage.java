@@ -9,13 +9,6 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
-import org.jf.smali.smaliParser.integer_literal_return;
-
-import com.sun.image.codec.jpeg.ImageFormatException;
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
-import com.sun.istack.internal.FinalArrayList;
 
 public class SelectImage {
 	private static final int OUT_WIDTH = 720;
@@ -68,15 +61,18 @@ public class SelectImage {
 
 								/** 压缩之后临时存放位置 */
 
-								JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
-								JPEGEncodeParam jep = JPEGCodec.getDefaultJPEGEncodeParam(tag);
-								/** 压缩质量 */
-								jep.setQuality(1.0f, true);
-								encoder.encode(tag, jep);
+//								JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
+//								JPEGEncodeParam jep = JPEGCodec.getDefaultJPEGEncodeParam(tag);
+//								/** 压缩质量 */
+//								jep.setQuality(1.0f, true);
+//								encoder.encode(tag, jep);
+								
+								ImageIO.write(tag, "jpeg", out);
+								tag.flush();
 								System.out.println(" success by compress");
 							}
 
-						} catch (ImageFormatException e) {
+						} catch (Exception e) {
 							System.out.println(" [failed]");
 							e.printStackTrace();
 						} finally {

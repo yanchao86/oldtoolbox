@@ -11,6 +11,14 @@ package com.pixshow.framework.ddb.internal;
 
 import java.io.StringReader;
 
+import com.pixshow.framework.ddb.api.DDBCentext;
+import com.pixshow.framework.ddb.api.DDBRoutingRuleAdapter;
+import com.pixshow.framework.ddb.api.Sharding;
+import com.pixshow.framework.log.api.SysLog;
+import com.pixshow.framework.log.api.SysLogFactory;
+import com.pixshow.framework.plugin.api.PluginRegisterManager;
+import com.pixshow.framework.utils.StringUtility;
+
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserManager;
 import net.sf.jsqlparser.schema.Table;
@@ -20,14 +28,6 @@ import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.update.Update;
 import net.sf.jsqlparser.util.deparser.StatementDeParser;
-
-import com.pixshow.framework.ddb.api.DDBCentext;
-import com.pixshow.framework.ddb.api.DDBRoutingRuleAdapter;
-import com.pixshow.framework.ddb.api.Sharding;
-import com.pixshow.framework.log.api.SysLog;
-import com.pixshow.framework.log.api.SysLogFactory;
-import com.pixshow.framework.plugin.api.PluginRegisterManager;
-import com.pixshow.framework.utils.StringUtility;
 
 /**
  * 

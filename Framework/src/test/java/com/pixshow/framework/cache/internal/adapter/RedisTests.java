@@ -9,9 +9,9 @@
  */
 package com.pixshow.framework.cache.internal.adapter;
 
-import redis.clients.jedis.Jedis;
-
 import com.pixshow.framework.config.Config;
+
+import redis.clients.jedis.Jedis;
 
 /**
  * 

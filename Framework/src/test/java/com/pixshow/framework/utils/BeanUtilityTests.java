@@ -9,8 +9,6 @@
  */
 package com.pixshow.framework.utils;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;

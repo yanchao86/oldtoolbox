@@ -70,6 +70,13 @@ public class ImageStorageTootl {
         return Config.getInstance().getString("toolbox.img.url") + folder + imageFileName;
     }
 
+    /**
+     * ApkUploadAction
+     * @param fileName
+     * @param file
+     * @return
+     *
+     */
     public static String upload(String fileName, File file) {
         return upload(fileName, Config.getInstance().getString("toolbox.img.folder"), file);
     }

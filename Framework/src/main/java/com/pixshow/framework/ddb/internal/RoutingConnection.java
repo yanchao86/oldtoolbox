@@ -27,8 +27,8 @@ import java.sql.Struct;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 import com.pixshow.framework.ddb.api.DDBCentext;
 import com.pixshow.framework.ddb.api.DDBCentextHolder;

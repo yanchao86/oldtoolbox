@@ -53,11 +53,12 @@ public class Mysql2RedisTask extends AbstractRedisService<String, String> {
 
     @Scheduled(fixedRate = 1000 * 60 * 10)
     public void toolboxApp() {
-        List<ToolboxBean> tools = toolboxService.searchTool(0, 10000);
+        List<ToolboxBean> tools = toolboxService.searchTool(-1, 10000);
         for (ToolboxBean toolbox : tools) {
             String appKey = "tb_toolbox@" + toolbox.getId();
             JSONObject app = JSONObject.fromObject(toolbox);
             this.set(appKey, app.toString());
+            
             log.info("toolboxApp redis set " + appKey + " end");
         }
 

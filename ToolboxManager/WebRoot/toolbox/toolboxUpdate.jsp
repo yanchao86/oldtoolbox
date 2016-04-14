@@ -43,6 +43,9 @@
 					alert("下载地址不能为空");
 					return false;
 				}
+				$("#downloadUrl").val($.trim(downloadUrl));
+				var detailUrl = $("#detailUrl").val();
+				$("#detailUrl").val($.trim(detailUrl));
 			}
 			$(function(){
 				$('#canMove').click(function() {

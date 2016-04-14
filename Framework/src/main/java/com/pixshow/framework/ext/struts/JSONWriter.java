@@ -28,8 +28,6 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.regex.Pattern;
 
-import net.sf.json.JSONNull;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.json.JSONException;
@@ -40,6 +38,8 @@ import org.apache.struts2.json.bridge.FieldBridge;
 import org.apache.struts2.json.bridge.ParameterizedBridge;
 
 import com.pixshow.framework.abbr.internal.AbbreviationProcessor;
+
+import net.sf.json.JSONNull;
 
 /**
  * 

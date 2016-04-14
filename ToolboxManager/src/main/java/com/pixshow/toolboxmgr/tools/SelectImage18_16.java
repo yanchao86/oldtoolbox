@@ -1,7 +1,6 @@
 package com.pixshow.toolboxmgr.tools;
 
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -9,13 +8,6 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
-import org.jf.smali.smaliParser.integer_literal_return;
-
-import com.sun.image.codec.jpeg.ImageFormatException;
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
-import com.sun.istack.internal.FinalArrayList;
 
 public class SelectImage18_16 {
 	private static final int OUT_WIDTH = 720;
@@ -81,7 +73,7 @@ public class SelectImage18_16 {
 								System.out.println(" success by compress");
 							}*/
 
-						} catch (ImageFormatException e) {
+						} catch (Exception e) {
 							System.out.println(" [failed]");
 							e.printStackTrace();
 						} finally {

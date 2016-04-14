@@ -10,7 +10,6 @@
 package com.pixshow.framework.storage.api;
 
 import java.io.File;
-import java.util.UUID;
 
 /**
  * 

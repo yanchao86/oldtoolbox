@@ -1,14 +1,8 @@
 package com.pixshow;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.apache.axis.types.IDRef;
-import org.apache.commons.io.FileUtils;
+import com.pixshow.toolboxmgr.tools.RedisUtil;
 
 import redis.clients.jedis.Jedis;
-
-import com.pixshow.toolboxmgr.tools.RedisUtil;
 
 public class TestRedis {
     public static void main(String[] args) {

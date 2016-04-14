@@ -12,12 +12,12 @@ package com.pixshow.framework.weibo;
 import java.io.File;
 import java.net.URLEncoder;
 
+import com.pixshow.framework.utils.FileUtility;
+import com.pixshow.framework.utils.HttpUtility;
+
 import weibo4j.Timeline;
 import weibo4j.http.ImageItem;
 import weibo4j.model.Status;
-
-import com.pixshow.framework.utils.FileUtility;
-import com.pixshow.framework.utils.HttpUtility;
 
 /**
  * 

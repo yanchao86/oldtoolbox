@@ -1,17 +1,11 @@
 package com.pixshow.toolboxmgr.action;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.httpclient.methods.multipart.FilePart;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
@@ -22,17 +16,8 @@ import org.springframework.stereotype.Controller;
 
 import com.pixshow.framework.config.Config;
 import com.pixshow.framework.support.BaseAction;
-import com.pixshow.framework.utils.FileUtility;
-import com.pixshow.framework.utils.HttpUtility;
 import com.pixshow.toolboxmgr.bean.ApkUploadBean;
 import com.pixshow.toolboxmgr.service.ApkUploadService;
-import com.pixshow.toolboxmgr.tools.ImageStorageTootl;
-import com.pixshow.toolboxmgr.tools.RedisFactory;
-import com.pixshow.toolboxmgr.tools.RedisUtil;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import redis.clients.jedis.Jedis;
 
 @Controller
 @Scope("prototype")
@@ -70,8 +55,11 @@ public class ApkUploadAction extends BaseAction {
             apkFileName = noSuffixFileName + "_" + sdf.format(new Date()) + ".apk";
         }
 
-        ImageStorageTootl.upload(apkFileName, apk);
-
+//        ImageStorageTootl.upload(apkFileName, apk);
+        
+        String uploadPath = Config.getInstance().getString("toolbox.upload.base.folder") + Config.getInstance().getString("toolbox.img.folder") + apkFileName;
+        apk.renameTo(new File(uploadPath));
+        
         ApkUploadBean bean = new ApkUploadBean();
         bean.setCreateDate(new Date());
         bean.setFileName(apkFileName);

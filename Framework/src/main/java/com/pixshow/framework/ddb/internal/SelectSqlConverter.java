@@ -11,6 +11,10 @@ package com.pixshow.framework.ddb.internal;
 
 import java.util.Iterator;
 
+import com.pixshow.framework.ddb.api.DDBRoutingRuleAdapter;
+import com.pixshow.framework.ddb.api.Sharding;
+import com.pixshow.framework.utils.StringUtility;
+
 import net.sf.jsqlparser.expression.AllComparisonExpression;
 import net.sf.jsqlparser.expression.AnyComparisonExpression;
 import net.sf.jsqlparser.expression.BinaryExpression;
@@ -62,10 +66,6 @@ import net.sf.jsqlparser.statement.select.SelectVisitor;
 import net.sf.jsqlparser.statement.select.SubJoin;
 import net.sf.jsqlparser.statement.select.SubSelect;
 import net.sf.jsqlparser.statement.select.Union;
-
-import com.pixshow.framework.ddb.api.DDBRoutingRuleAdapter;
-import com.pixshow.framework.ddb.api.Sharding;
-import com.pixshow.framework.utils.StringUtility;
 
 /**
  * 

@@ -19,10 +19,6 @@ import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.io.FileUtils;
 
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
-
 public class ImageCompressUtil {
 	/**
 	 * 直接指定压缩后的宽高： (先保存原文件，再压缩、上传)
@@ -56,11 +52,14 @@ public class ImageCompressUtil {
 			newImage = filePrex + smallIcon + oldFile.substring(filePrex.length());
 			/** 压缩之后临时存放位置 */
 			FileOutputStream out = new FileOutputStream(newImage);
-			JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
-			JPEGEncodeParam jep = JPEGCodec.getDefaultJPEGEncodeParam(tag);
-			/** 压缩质量 */
-			jep.setQuality(quality, true);
-			encoder.encode(tag, jep);
+//			JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
+//			JPEGEncodeParam jep = JPEGCodec.getDefaultJPEGEncodeParam(tag);
+//			/** 压缩质量 */
+//			jep.setQuality(quality, true);
+//			encoder.encode(tag, jep);
+			
+			ImageIO.write(tag, "JPEG", out);
+			tag.flush();
 			out.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

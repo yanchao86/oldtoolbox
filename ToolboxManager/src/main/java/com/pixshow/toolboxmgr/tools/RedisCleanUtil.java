@@ -8,9 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import net.dongliu.apk.parser.ApkParser;
-import net.dongliu.apk.parser.bean.ApkMeta;
-
 import org.apache.commons.io.FileUtils;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
@@ -18,6 +15,8 @@ import org.dom4j.Element;
 import org.dom4j.QName;
 import org.dom4j.io.SAXReader;
 
+import net.dongliu.apk.parser.ApkParser;
+import net.dongliu.apk.parser.bean.ApkMeta;
 import redis.clients.jedis.Jedis;
 
 public class RedisCleanUtil {

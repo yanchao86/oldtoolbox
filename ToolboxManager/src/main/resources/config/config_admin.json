@@ -61,10 +61,14 @@
 					"url":"toolbox/recycle.jsp"
 				},
 				"m_3_6":{
-					"name":"APK上传",
+					"name":"APK上传_OLD",
 					"url":"manager/uploadHistory.do"
 				},
 				"m_3_7":{
+					"name":"APK上传_NEW",
+					"url":"manager/new/uploadHistory.do"
+				},				
+				"m_3_8":{
 					"name":"开关",
 					"url":"manager/selfswitch.do"
 				}

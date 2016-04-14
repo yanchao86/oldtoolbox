@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -47,6 +48,30 @@ public class FileUtility extends FileUtils {
         }
     }
 
+    public static String sha1(File file) {
+        try {
+            byte[] bytes = FileUtility.readFileToByteArray(file);
+            MessageDigest digest = MessageDigest.getInstance("SHA-1");
+            digest.update(bytes);
+            byte messageDigest[] = digest.digest();
+            // Create Hex String
+            StringBuffer hexString = new StringBuffer();
+            // 字节数组转换为 十六进制 数
+            for (int i = 0; i < messageDigest.length; i++) {
+                String shaHex = Integer.toHexString(messageDigest[i] & 0xFF);
+                if (shaHex.length() < 2) {
+                    hexString.append(0);
+                }
+                hexString.append(shaHex);
+            }
+            return hexString.toString();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static String splicePath(String... paths) {
         String fullPath = null;
         for (String path : paths) {
@@ -66,7 +91,9 @@ public class FileUtility extends FileUtils {
         try {
             File dir = File.createTempFile(prefix, "dir");
             if (dir.delete()) {
-                if (dir.mkdir()) { return dir; }
+                if (dir.mkdir()) {
+                    return dir;
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -115,5 +142,5 @@ public class FileUtility extends FileUtils {
         /* Close output stream, our files are zipped */
         zip_output.close();
     }
-    
+
 }

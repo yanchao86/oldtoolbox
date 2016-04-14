@@ -5,8 +5,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.json.JSONObject;
-
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.struts2.ServletActionContext;
 
@@ -17,6 +15,8 @@ import com.pixshow.framework.exception.api.LogicException;
 import com.pixshow.framework.exception.api.SysException;
 import com.pixshow.framework.log.api.SysLog;
 import com.pixshow.framework.log.api.SysLogFactory;
+
+import net.sf.json.JSONObject;
 
 public class UnhandledExceptionInterceptor extends AbstractInterceptor {
 

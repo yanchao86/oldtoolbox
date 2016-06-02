@@ -307,9 +307,9 @@ public class ToolboxUpdateAction extends BaseAction {
 
 		bean.setExtInfo3(extInfo3.toString());
 		toolboxService.updateTool(bean);
-		if(!oldDownloadUrl.equals(downloadUrl)){
-			delApkFromRedis(oldDownloadUrl);
-		}
+//		if(!oldDownloadUrl.equals(downloadUrl)){
+//			delApkFromRedis(oldDownloadUrl);
+//		}
 		return SUCCESS;
 	}
 

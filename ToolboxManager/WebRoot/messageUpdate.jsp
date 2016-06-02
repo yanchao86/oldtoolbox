@@ -1,4 +1,5 @@
- <%@page import="com.pixshow.framework.utils.WebUtility"%>
+ <%@page import="com.pixshow.toolboxmgr.tools.CheckUrlUtil"%>
+<%@page import="com.pixshow.framework.utils.WebUtility"%>
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%@page import="net.sf.json.JSONObject"%>
 <%@page import="com.pixshow.toolboxmgr.tools.ImageStorageTootl"%>
@@ -57,6 +58,9 @@ $(function() {
 	
 })
 </script>
+<style>
+.font3{font-size: 16px; color: red; font-style: italic}
+</style>
 </head>
 
 <body>
@@ -104,7 +108,17 @@ $(function() {
 			</td>
 		</tr>
 		<tr>
-			<th>下载地址</th>
+			<th>下载地址
+			<%
+			String downurl = dljson.getString("url");
+			 JSONObject checkDown =  new CheckUrlUtil().checkDownloadUrl(downurl);
+			 if(checkDown.containsKey("error")) {%>
+			      <font class="font3">
+				    	<%=checkDown.getString("error") %>
+				    	<%=checkDown.containsKey("nodes")?checkDown.getJSONArray("nodes").toString():"" %>
+				    </font>
+			<%} %>
+			</th>
 			<td>
 				<input type="text" id="dlUrl" name="dlUrl" value="<%=dljson.getString("url")%>" size="50"/>
 				是否在wifi自动下载<input type="checkbox" id="dlCheckbox" name="dlCheckbox" <%=dljson.optBoolean("auto") ? "checked" : ""%> />

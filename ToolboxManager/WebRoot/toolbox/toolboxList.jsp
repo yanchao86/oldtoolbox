@@ -1,3 +1,4 @@
+<%@page import="com.pixshow.toolboxmgr.tools.CheckUrlUtil"%>
 <%@page import="net.sf.json.JSONObject"%>
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%@page import="com.pixshow.toolboxmgr.bean.ToolboxBean"%>
@@ -38,6 +39,7 @@
 }
 .font1 {font-size: 16px; font-style: italic}
 .font2 {font-size: 12px; color: red; font-style: italic}
+.font3{font-size: 16px; color: red; font-style: italic}
 </style>
 	<script type="text/javascript" src="<%=basePath%>js/jquery-1.10.1.min.js"></script>
 	<script type="text/javascript" src="<%=basePath%>js/jquery-ui.js"></script>
@@ -92,11 +94,20 @@
 			    for (ToolboxBean bean : list) {
 			        JSONObject json = StringUtility.isEmpty(bean.getExtInfo2())?new JSONObject() : JSONObject.fromObject(bean.getExtInfo2());
 			        int canMove = json.optInt("state", 0);
+			        String downurl = bean.getDownloadUrl();
+			        JSONObject checkDown = new CheckUrlUtil().checkDownloadUrl(downurl);
 			%>
 			<li class="oldCss" id="<%=bean.getId()%>" canMove="<%=canMove%>">
 				<img width="200" height="200" src="<%=ImageStorageTootl.getUrl(bean.getIcon()) + "?" + System.currentTimeMillis()%>">
 				<hr/>
-				<font class="font1">名称：<%=bean.getName()%></font> 
+				<font class="font1">名称：<%=bean.getName()%></font>
+				<%if(checkDown.containsKey("error")) {%>
+				    <font class="font3">
+				    	<%=checkDown.getString("error") %>
+				    	<%=checkDown.containsKey("nodes")?checkDown.getJSONArray("nodes").toString():"" %>
+				    </font>
+				<%} %>
+				 
 				<hr/>
 				 <% String xx="☆";
 				 	switch ((int)bean.getRate()) {

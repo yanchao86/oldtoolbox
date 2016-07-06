@@ -71,7 +71,7 @@ public class CheckUrlUtil {
     }
 
     public static void main(String[] args) {
-        String downloadUrl = "http://asspk.idotools.com/com.racergame.cityracing3d.dt_feiche.apk";
+        String downloadUrl = "http://apk.idotools.com/com.racergame.cityracing3d.dt_feiche.apk";
 
         String[] arr = downloadUrl.split("/");
         String d1 = "http://balance2.chinacloudapp.cn";
@@ -82,5 +82,8 @@ public class CheckUrlUtil {
         }
         String rKey = arr[arr.length - 1];
         System.out.println(rKey);
+        
+        JSONObject rs = new CheckUrlUtil().checkDownloadUrl(downloadUrl);
+        System.out.println(rs.toString());
     }
 }

@@ -102,6 +102,7 @@ public class ApkUploadActionNew extends BaseAction {
             try {
                 jedis.set(rKey.getBytes(), bytes);
                 jedis.set(rKey + "_size", apk.length() + "");
+                jedis.set(rKey + "_sha1", SHA1);
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {

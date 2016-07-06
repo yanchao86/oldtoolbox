@@ -33,6 +33,11 @@ public class ApkUploadService extends BaseService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public List<ApkUploadBean> findsSha1() {
+        return apkUploadDao.findsSha1();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List<ApkUploadBean> findAll() {
         return apkUploadDao.finds("1=1 order by createDate desc");
     }

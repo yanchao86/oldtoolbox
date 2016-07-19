@@ -47,7 +47,7 @@ public class AuthenticateFilterPlugin implements FilterPlugin {
     public boolean beginDoFilter(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String login = (String) request.getSession().getAttribute("login");
         String uri = request.getRequestURI();
-        if (uri.endsWith("/login.jsp") || uri.endsWith("/login.do") || "ok".equals(login)) { return CONTINUE; }
+        if (uri.endsWith("/login.jsp") || uri.endsWith("/login.do") || uri.endsWith("/refreshCDN.do") || "ok".equals(login)) { return CONTINUE; }
 
         String url = request.getRequestURL().toString();
         if (StringUtility.isNotEmpty(request.getQueryString())) {

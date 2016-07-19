@@ -20,8 +20,8 @@ import com.aliyuncs.profile.IClientProfile;
 * 
 */
 public class AliyunTool {
-    private static final AliyunTool       instance = new AliyunTool();
-    private final List<IAcsClient> clients   = new ArrayList<IAcsClient>();
+    private static final AliyunTool instance = new AliyunTool();
+    private final List<IAcsClient>  clients  = new ArrayList<IAcsClient>();
 
     private AliyunTool() {
         //      初始化IAcsClient regionId
@@ -40,7 +40,7 @@ public class AliyunTool {
         return clients.get(0);
     }
 
-    public static void refreshCDN(String type, String path) {
+    public static String refreshCDN(String type, String path) {
         RefreshObjectCachesRequest refresh = new RefreshObjectCachesRequest();
         refresh.setObjectType(type);
         refresh.setObjectPath(path);
@@ -49,13 +49,14 @@ public class AliyunTool {
         refresh.setMethod(MethodType.POST); //指定请求方法
         try {
             HttpResponse httpResponse = AliyunTool.getInstance().getClient().doAction(refresh);
-            //            System.out.println(httpResponse.getUrl());
-            //            System.out.println(new String(httpResponse.getContent()));
+//            System.out.println(httpResponse.getUrl());
+            return new String(httpResponse.getContent());
         } catch (ServerException e) {
             e.printStackTrace();
         } catch (ClientException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
 }

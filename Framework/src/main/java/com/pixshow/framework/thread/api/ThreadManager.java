@@ -17,7 +17,7 @@ import com.pixshow.framework.config.Config;
 
 public class ThreadManager {
 
-    private ThreadPoolExecutor         executor;
+    private ThreadPoolExecutor executor;
 
     private static final ThreadManager instance = new ThreadManager();
 
@@ -25,8 +25,15 @@ public class ThreadManager {
         int corePoolSize = Config.getInstance().getInteger("threadPool.corePoolSize", 10);
         int maximumPoolSize = Config.getInstance().getInteger("threadPool.maximumPoolSize", 50);
         int keepAliveTime = Config.getInstance().getInteger("threadPool.keepAliveTime", 1000);
-        executor = new ThreadPoolExecutor(corePoolSize, maximumPoolSize, keepAliveTime, TimeUnit.SECONDS,//
-                new ArrayBlockingQueue<Runnable>(corePoolSize), new ThreadPoolExecutor.CallerRunsPolicy());
+        
+        executor = new ThreadPoolExecutor(//
+                corePoolSize, //
+                maximumPoolSize, //
+                keepAliveTime, //
+                TimeUnit.SECONDS, //
+                new ArrayBlockingQueue<Runnable>(corePoolSize), //
+                new ThreadPoolExecutor.CallerRunsPolicy()//
+        );
     }
 
     public static ThreadManager getInstance() {
